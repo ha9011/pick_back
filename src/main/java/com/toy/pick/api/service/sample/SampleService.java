@@ -21,9 +21,7 @@ public class SampleService {
     public GetSampleResDto selectSampleByName(GetSampleReqDto getSampleReqDto) throws Exception {
         log.info("params : " + getSampleReqDto.toString());
         List<Sample> sampleList = sampleRepository.findByName(getSampleReqDto.getName());
-        if(true) {
-            throw new Exception("에러발생");
-        }
+
         return GetSampleResDto.of(sampleList);
     }
 }
