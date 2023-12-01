@@ -28,4 +28,5 @@ public class SampleController {
             return ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage(), null);
         }
     };
+
 }

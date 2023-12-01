@@ -1,4 +1,6 @@
-insert into sample(sample_id, name)
+
+
+insert into pick.sample(sample_id, name)
 values ('001', 'red'),
        ('002', 'red'),
        ('003', 'blue'),
