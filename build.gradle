@@ -39,3 +39,6 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+jar {
+	enabled = false // 빌드시 plain.jar 는 생성하지 않기
+}
