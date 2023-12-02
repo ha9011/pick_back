@@ -20,7 +20,7 @@ public class EnvSampleController {
     @GetMapping("/sample/env")
     public String getEnv(){
 
-        return envDefault + " : " + envActive + " : "+ tt;
+        return "default env : " + envDefault + " : " + envActive + " : "+ tt;
     };
 
 
