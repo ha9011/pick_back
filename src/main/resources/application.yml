@@ -8,6 +8,8 @@ server:
     context-path: /v1/api
   port: 8080
 
+
+
 ############ local ###########
 ---
 spring:
@@ -23,7 +25,7 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
-  h2:        # http://127.0.0.1:8080/h2-console
+  h2:        # http://127.0.0.1:8080/v1/api/h2-console
     console: # H2 DB
       enabled: true           # H2 Console
       path: /h2-console       # H2 Console
@@ -34,11 +36,22 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-    defer-datasource-initialization: true # resources/data.sql ??   ++ jpa table init ? ?? ??
+    defer-datasource-initialization: true
 
   sql:
     init:
       mode: always # data.sql ??
+
+
+springdoc:  # https://springdoc.org/#properties 문서 참고
+  packages-to-scan: com.toy.pick.api.controller # 해당 경로 풀스캔
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: / # http://localhost:8080/v1/api/swagger-ui/index.html
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
 
 logging:
   level:
@@ -74,11 +87,21 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-    defer-datasource-initialization: false # resources/data.sql
+    defer-datasource-initialization: true
 
   sql:
     init:
       mode: never # data.sql ?? ??
+
+springdoc:  # https://springdoc.org/#properties 문서 참고
+  packages-to-scan: com.toy.pick.api.controller # 해당 경로 풀스캔
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: / # http://localhost:8080/v1/api/swagger-ui/index.html
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
 
 #logging:
 #  level:
