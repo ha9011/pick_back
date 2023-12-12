@@ -2,23 +2,31 @@
 spring:
   profiles:
     default: local
+    active: ${env}
+server:
+  servlet:
+    context-path: /v1/api
+  port: 8080
 
 ############ local ###########
 ---
-
 spring:
   config:
     activate:
       on-profile: local
+
+  test:
+    text: local working
+
   datasource:
     url: jdbc:h2:mem:pickLocal  # h2 in memory
     username: sa
     password:
     driver-class-name: org.h2.Driver
   h2:        # http://127.0.0.1:8080/h2-console
-    console: # H2 DB? ??? ??? ? ?? ??
-      enabled: true           # H2 Console ?? ??
-      path: /h2-console       # H2 Console ?? ??
+    console: # H2 DB
+      enabled: true           # H2 Console
+      path: /h2-console       # H2 Console
   jpa:
     hibernate:
       ddl-auto: create
@@ -26,11 +34,56 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+    defer-datasource-initialization: true # resources/data.sql ??   ++ jpa table init ? ?? ??
+
+  sql:
+    init:
+      mode: always # data.sql ??
 
 logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.orm.jdbc.bind: trace
+
+############ dev ###########
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+#  mysql:
+#    datasource:
+#      jdbcUrl: jdbc:log4jdbc:mysql://${rds.hostname}:${rds.port}/pick?autoReconnect=true&socketTimeout=60000&connectTimeout=60000&serverTimezone=Asia/Seoul&useUnicode=yes&characterEncoding=utf8&useSSL=false
+#      username: ${rds.username}
+#      password: ${rds.password}
+#      connection-init-sql: SET NAMES utf8mb4
+  test:
+    text: dev working
+
+  datasource:
+    url: jdbc:mysql://${rds.hostname}:${rds.port}/pick
+    username: ${rds.username}
+    password: ${rds.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+    defer-datasource-initialization: false # resources/data.sql
+
+  sql:
+    init:
+      mode: never # data.sql ?? ??
+
+#logging:
+#  level:
+#    org.hibernate.SQL: debug
+#    org.hibernate.orm.jdbc.bind: trace
 
 ############ test ###########
 ---

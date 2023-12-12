@@ -1,2 +1,2 @@
 ### 주문 신규 생성
-GET localhost:8080/sample/get
+GET localhost:8080/v1/api/sample
