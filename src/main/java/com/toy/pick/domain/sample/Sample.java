@@ -1,15 +1,14 @@
 package com.toy.pick.domain.sample;
 
 import com.toy.pick.domain.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import lombok.Getter;
+import jakarta.persistence.*;
+import lombok.*;
 
 
 @Entity
 @Getter
+@ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Sample extends BaseEntity {
 
     @Id
@@ -18,5 +17,13 @@ public class Sample extends BaseEntity {
     private Long id;
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    private SampleStatus sampleStatus;
+
+    @Builder
+    public Sample(String name, SampleStatus sampleStatus) {
+        this.name = name;
+        this.sampleStatus = sampleStatus;
+    }
 
 }
