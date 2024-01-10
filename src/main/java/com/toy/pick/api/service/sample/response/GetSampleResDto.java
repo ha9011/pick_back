@@ -1,12 +1,10 @@
-package com.toy.pick.api.controller.sample.dto.response;
+package com.toy.pick.api.service.sample.response;
 
 import com.toy.pick.domain.sample.Sample;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 public class GetSampleResDto {

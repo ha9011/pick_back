@@ -1,8 +1,8 @@
 package com.toy.pick.api.controller.sample;
 
 import com.toy.pick.api.ApiResponse;
-import com.toy.pick.api.controller.sample.dto.request.GetSampleReqDto;
-import com.toy.pick.api.controller.sample.dto.response.GetSampleResDto;
+import com.toy.pick.api.controller.sample.request.GetSampleReqDto;
+import com.toy.pick.api.service.sample.response.GetSampleResDto;
 import com.toy.pick.api.service.sample.SampleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
