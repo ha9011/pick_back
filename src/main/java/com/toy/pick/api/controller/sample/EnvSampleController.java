@@ -12,15 +12,13 @@ public class EnvSampleController {
 
     @Value("${spring.profiles.default}")
     private String envDefault;
-    @Value("${spring.profiles.active}")
-    private String envActive;
     @Value("${spring.test.text}")
     private String tt;
 
     @GetMapping("/sample/env")
     public String getEnv(){
 
-        return "default env : " + envDefault + " : " + envActive + " : "+ tt;
+        return "default env : " + envDefault + " : " + " : "+ tt;
     };
 
 
