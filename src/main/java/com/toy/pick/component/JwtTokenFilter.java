@@ -40,8 +40,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        if (request.getRequestURI().startsWith("/v1/api/swagger-ui/")){
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // /v1/api/login/oauth2/code/{provider}
+        if (request.getRequestURI().startsWith("/v1/api/v3/api-docs")){
+            filterChain.doFilter(request, response);
+            return;
+        }
         if (request.getRequestURI().startsWith("/v1/api/login/oauth2/code/")){
             filterChain.doFilter(request, response);
             return;
