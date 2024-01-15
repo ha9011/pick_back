@@ -16,9 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-@TestPropertySource(properties = {
-        "spring.profiles.active=test"
-})
+@ActiveProfiles("test")
 class SampleTest {
 
     @Autowired

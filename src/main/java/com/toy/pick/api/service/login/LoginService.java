@@ -2,9 +2,11 @@ package com.toy.pick.api.service.login;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.toy.pick.api.ApiResponse;
 import com.toy.pick.api.service.login.dto.OauthPropertiesDto;
 import com.toy.pick.api.service.login.dto.OauthTokenDto;
 import com.toy.pick.api.service.login.dto.UserInfo;
+import com.toy.pick.api.service.login.response.JwtTokenRes;
 import com.toy.pick.component.JwtTokenProvider;
 import com.toy.pick.component.Oauth2Properties;
 import com.toy.pick.domain.Oauth.OauthAttributes;
@@ -35,7 +37,7 @@ public class LoginService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     private final JwtTokenProvider jwtTokenProvider;
-    public void loginSnsOauth(String provider, String code) throws JsonProcessingException {
+    public ApiResponse<JwtTokenRes> loginSnsOauth(String provider, String code) throws JsonProcessingException {
 
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         Map<String, OauthPropertiesDto> OauthProperties = oauth2Properties.getProviders();
@@ -51,6 +53,7 @@ public class LoginService {
         String accessToken = jwtTokenProvider.createAccessToken(userInfo);
         String refreshToken = jwtTokenProvider.createRefreshToken(userInfo);
 
+        return ApiResponse.ok(JwtTokenRes.of(accessToken, refreshToken));
 //        UserInfo allPayload = jwtTokenProvider.getAllPayload(accessToken);
 //        boolean accValid = jwtTokenProvider.validateToken(accessToken);
 //        String jwtPayloadUserId = jwtTokenProvider.getJwtPayloadUserId(accessToken);
@@ -110,5 +113,11 @@ public class LoginService {
             log.error("소셜 로그인에 실패 했습니다. 응답 코드: {}", res.getStatusCode()); // TODO 명칭변경, error handler 만들기
             throw new HttpClientErrorException(res.getStatusCode(), "소셜 로그인에 실패 했습니다.");
         }
+    }
+
+    public ApiResponse<Object> userTokenInfo(String accessToken) {
+        UserInfo allPayload = jwtTokenProvider.getAllPayload(accessToken);
+
+        return ApiResponse.ok(allPayload);
     }
 }

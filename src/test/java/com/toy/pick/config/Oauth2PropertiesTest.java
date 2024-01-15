@@ -18,7 +18,7 @@ class Oauth2PropertiesTest {
     private Oauth2Properties oauth2Properties;
 
     @Test
-    @DisplayName("")
+    @DisplayName("test")
     void testName() {
         // given
         Map<String, OauthPropertiesDto> oauthProperties = oauth2Properties.getProviders();

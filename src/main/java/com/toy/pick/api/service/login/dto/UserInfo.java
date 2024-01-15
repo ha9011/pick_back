@@ -20,6 +20,8 @@ public class UserInfo {
         this.provider = provider;
     }
 
+
+    // TODO <- 다형성으로 만들기
     public static UserInfo of(NaverUserInfo userInfo, String provider){
         return UserInfo.builder()
                 .userId(userInfo.getId())
