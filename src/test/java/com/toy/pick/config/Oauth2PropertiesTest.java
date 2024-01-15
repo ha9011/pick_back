@@ -1,6 +1,7 @@
 package com.toy.pick.config;
 
 import com.toy.pick.api.service.login.dto.OauthPropertiesDto;
+import com.toy.pick.component.Oauth2Properties;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import java.util.Map;
 class Oauth2PropertiesTest {
 
     @Autowired
-    private Oauth2PropertiesConfig oauth2Properties;
+    private Oauth2Properties oauth2Properties;
 
     @Test
     @DisplayName("")

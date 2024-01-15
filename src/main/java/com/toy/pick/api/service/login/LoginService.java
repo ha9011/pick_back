@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toy.pick.api.service.login.dto.OauthPropertiesDto;
 import com.toy.pick.api.service.login.dto.OauthTokenDto;
 import com.toy.pick.api.service.login.dto.UserInfo;
-import com.toy.pick.config.Oauth2PropertiesConfig;
+import com.toy.pick.component.JwtTokenProvider;
+import com.toy.pick.component.Oauth2Properties;
 import com.toy.pick.domain.Oauth.OauthAttributes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -30,9 +30,11 @@ import java.util.Map;
 @Slf4j
 public class LoginService {
 
-    private final Oauth2PropertiesConfig oauth2Properties;
+    private final Oauth2Properties oauth2Properties;
     private final ObjectMapper om;
     private final RestTemplate restTemplate = new RestTemplate();
+
+    private final JwtTokenProvider jwtTokenProvider;
     public void loginSnsOauth(String provider, String code) throws JsonProcessingException {
 
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
@@ -40,18 +42,27 @@ public class LoginService {
         OauthPropertiesDto oauthProperties = OauthProperties.get(provider); // 해당 소셜에 대한 Oauth 정보
 
         // Provider 에게 토큰 획득 하기
-        String accessToken = this.getSnsAccessToken(code, oauthProperties);
+        String snsAccessToken = this.getSnsAccessToken(code, oauthProperties);
 
         // 획득한 토큰으로 사용자 정도 얻기
-        UserInfo userInfo = this.getSnsUserInfo(accessToken, oauthProperties, provider);
+        UserInfo userInfo = this.getSnsUserInfo(snsAccessToken, oauthProperties, provider);
 
         // JWT 만들기
+        String accessToken = jwtTokenProvider.createAccessToken(userInfo);
+        String refreshToken = jwtTokenProvider.createRefreshToken(userInfo);
+
+//        UserInfo allPayload = jwtTokenProvider.getAllPayload(accessToken);
+//        boolean accValid = jwtTokenProvider.validateToken(accessToken);
+//        String jwtPayloadUserId = jwtTokenProvider.getJwtPayloadUserId(accessToken);
+//        String jwtPayloadSns = jwtTokenProvider.getJwtPayloadProvider(accessToken);
+//        UserInfo allPayload2 = jwtTokenProvider.getAllPayload(refreshToken);
+//        boolean refValid = jwtTokenProvider.validateToken(refreshToken);
+
         // DB 가입
+        // 1. 이미 가입됐는지 확인,
+        //      - 가입 X -> 가입
+        //      - 가입 O -> 가입 업데이트
 
-
-
-        log.info("userInfo : " +userInfo.getOauthId());
-        log.info("userInfo : " +userInfo.getProvider());
     }
 
     private UserInfo getSnsUserInfo(String accessToken, OauthPropertiesDto oauthProperties, String provider) throws JsonProcessingException {
