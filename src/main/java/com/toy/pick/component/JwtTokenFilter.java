@@ -40,16 +40,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        if (request.getRequestURI().startsWith("/v1/api/swagger-ui/")){
+
+        // swagger
+        if (request.getRequestURI().startsWith("/v1/api/swagger-ui/")
+            || request.getRequestURI().startsWith("/v1/api/v3/api-docs")){
             filterChain.doFilter(request, response);
             return;
         }
 
-        // /v1/api/login/oauth2/code/{provider}
-        if (request.getRequestURI().startsWith("/v1/api/v3/api-docs")){
-            filterChain.doFilter(request, response);
-            return;
-        }
+        // 최초 로그인
         if (request.getRequestURI().startsWith("/v1/api/login/oauth2/code/")){
             filterChain.doFilter(request, response);
             return;
@@ -82,7 +81,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             String json = new ObjectMapper().writeValueAsString(ApiResponse.of(HttpStatus.UNAUTHORIZED, "유효하지 않는 토큰값입니다", null));
 
             response.getWriter().write(json);
-
         }
     }
 

@@ -25,14 +25,14 @@ public class SampleController {
     @Parameter(name = "name", description = "이름 조건")
     @GetMapping("/sample")
     public ApiResponse<GetSampleResDto> getSampleByName(
-            @Valid GetSampleReqDto paramsDto){
+            @Valid GetSampleReqDto paramsDto) throws Exception {
 
         try{
             GetSampleResDto getSampleResDto = sampleService.selectSampleByName(paramsDto);
             System.out.println(getSampleResDto.toString());
             return ApiResponse.ok(getSampleResDto);
         }catch (Exception e){
-            return ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage(), null);
+            throw new Exception();
         }
     };
 

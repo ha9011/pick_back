@@ -11,22 +11,23 @@ public class ApiResponse<T> {
     private String message;
     private T data;
 
-    public ApiResponse(HttpStatus httpStatus,  String message, T data) {
+    public ApiResponse(HttpStatus httpStatus,  String message, T data, String statusMessage) {
         this.code = httpStatus.value();
         this.status = httpStatus;
         this.message = message;
         this.data = data;
+        this.StatusMessage = statusMessage;
     }
 
-    public static <T> ApiResponse<T> of(HttpStatus httpStatus, String message,T data) {
-        return new ApiResponse<>(httpStatus, message, data);
+    public static <T> ApiResponse<T> of(HttpStatus httpStatus, String message ,T data, String statusMessage) {
+        return new ApiResponse<>(httpStatus, message, data, statusMessage);
     }
 
-    public static <T> ApiResponse<T> of(HttpStatus httpStatus, T data) {
-        return of(httpStatus, httpStatus.name(), data);
+    public static <T> ApiResponse<T> of(HttpStatus httpStatus, T data, String statusMessage) {
+        return of(httpStatus, httpStatus.name(), data, statusMessage);
     }
 
     public static <T> ApiResponse<T> ok(T data) {
-        return of(HttpStatus.OK, data);
+        return of(HttpStatus.OK, data, "SUCCESS");
     }
 }
