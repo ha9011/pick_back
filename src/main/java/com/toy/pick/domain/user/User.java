@@ -4,8 +4,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id
@@ -18,6 +21,7 @@ public class User {
 
     private String name; // 닉네임
     private String refreshToken;
+
 
 
     public void updateRefreshToken(String refreshToken){
