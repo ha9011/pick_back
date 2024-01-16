@@ -10,6 +10,8 @@ import com.toy.pick.api.service.login.response.JwtTokenRes;
 import com.toy.pick.component.JwtTokenProvider;
 import com.toy.pick.component.Oauth2Properties;
 import com.toy.pick.domain.Oauth.OauthAttributes;
+import com.toy.pick.domain.user.User;
+import com.toy.pick.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -37,6 +39,9 @@ public class LoginService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final UserRepository userRepository;
+
     public ApiResponse<JwtTokenRes> loginSnsOauth(String provider, String code) throws JsonProcessingException {
 
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
@@ -53,19 +58,17 @@ public class LoginService {
         String accessToken = jwtTokenProvider.createAccessToken(userInfo);
         String refreshToken = jwtTokenProvider.createRefreshToken(userInfo);
 
-        return ApiResponse.ok(JwtTokenRes.of(accessToken, refreshToken));
-//        UserInfo allPayload = jwtTokenProvider.getAllPayload(accessToken);
-//        boolean accValid = jwtTokenProvider.validateToken(accessToken);
-//        String jwtPayloadUserId = jwtTokenProvider.getJwtPayloadUserId(accessToken);
-//        String jwtPayloadSns = jwtTokenProvider.getJwtPayloadProvider(accessToken);
-//        UserInfo allPayload2 = jwtTokenProvider.getAllPayload(refreshToken);
-//        boolean refValid = jwtTokenProvider.validateToken(refreshToken);
-
         // DB 가입
         // 1. 이미 가입됐는지 확인,
-        //      - 가입 X -> 가입
-        //      - 가입 O -> 가입 업데이트
+        User user = userRepository.findByUserId(userInfo.getUserId());
+        if(user == null){ // 새로 생성
+            User createdUser = User.create(userInfo.getUserId(), userInfo.getProvider(), "닉네임", refreshToken);
+            userRepository.save(createdUser);
+        }else{ // refresh 토큰만 업데이트
+            user.updateRefreshToken(refreshToken);
+        }
 
+        return ApiResponse.ok(JwtTokenRes.of(accessToken, refreshToken));
     }
 
     private UserInfo getSnsUserInfo(String accessToken, OauthPropertiesDto oauthProperties, String provider) throws JsonProcessingException {

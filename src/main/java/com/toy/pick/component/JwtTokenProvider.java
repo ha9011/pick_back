@@ -64,6 +64,18 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    public String validateAndRefreshAccessToken(String refreshToken) {
+        // Refresh Token의 유효성 검증
+        if (validateToken(refreshToken)) {
+            // Refresh Token이 유효하면 새로운 Access Token 발급
+            UserInfo allPayload = getAllPayload(refreshToken);
+            return createAccessToken(allPayload);
+        } else {
+            // Refresh Token이 유효하지 않으면 예외 처리 또는 다른 처리 수행
+            throw new JwtException("유효하지 않은 토큰입니다.");
+        }
+    }
+
     public UserInfo getAllPayload(String token) {
 
         String tokenWithoutBearer = token.replace("Bearer ", "");
@@ -84,7 +96,7 @@ public class JwtTokenProvider {
         try {
             return (String) Jwts.parserBuilder().setSigningKey(scretkey).build().parseClaimsJws(tokenWithoutBearer).getBody().get("userId");
         } catch (JwtException e) {
-            throw new RuntimeException("유효하지 않은 토큰입니다.");
+            throw new JwtException("유효하지 않은 토큰입니다.");
         }
     }
     public String getJwtPayloadProvider(String token) {
@@ -93,7 +105,7 @@ public class JwtTokenProvider {
         try {
             return (String) Jwts.parserBuilder().setSigningKey(scretkey).build().parseClaimsJws(tokenWithoutBearer).getBody().get("provider");
         } catch (JwtException e) {
-            throw new RuntimeException("유효하지 않은 토큰입니다.");
+            throw new JwtException("유효하지 않은 토큰입니다.");
         }
     }
 
@@ -102,7 +114,7 @@ public class JwtTokenProvider {
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(scretkey).build().parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch ( JwtException | IllegalArgumentException e) {
-            return false;
+            throw new JwtException("유효하지 않은 토큰입니다.");
         }
     }
 }
