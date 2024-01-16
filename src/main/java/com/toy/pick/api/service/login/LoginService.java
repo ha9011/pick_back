@@ -10,8 +10,8 @@ import com.toy.pick.api.service.login.response.JwtTokenRes;
 import com.toy.pick.component.JwtTokenProvider;
 import com.toy.pick.component.Oauth2Properties;
 import com.toy.pick.domain.Oauth.OauthAttributes;
-import com.toy.pick.domain.user.User;
-import com.toy.pick.domain.user.UserRepository;
+import com.toy.pick.domain.user.Member;
+import com.toy.pick.domain.user.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -40,7 +40,7 @@ public class LoginService {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     public ApiResponse<JwtTokenRes> loginSnsOauth(String provider, String code) throws JsonProcessingException {
 
@@ -60,12 +60,13 @@ public class LoginService {
 
         // DB 가입
         // 1. 이미 가입됐는지 확인,
-        User user = userRepository.findByUserId(userInfo.getUserId());
-        if(user == null){ // 새로 생성
-            User createdUser = User.create(userInfo.getUserId(), userInfo.getProvider(), "닉네임", refreshToken);
-            userRepository.save(createdUser);
-        }else{ // refresh 토큰만 업데이트
-            user.updateRefreshToken(refreshToken);
+        Member member = memberRepository.findByUserId(userInfo.getUserId());
+        if(member == null){ // 새로 생성
+            Member createdMember = Member.create(userInfo.getUserId(), userInfo.getProvider(), "닉네임", accessToken, refreshToken);
+            memberRepository.save(createdMember);
+        }else{ // 토큰 업데이트 업데이트
+            member.updateRefreshToken(refreshToken);
+            member.updateAccessToken(accessToken);
         }
 
         return ApiResponse.ok(JwtTokenRes.of(accessToken, refreshToken));

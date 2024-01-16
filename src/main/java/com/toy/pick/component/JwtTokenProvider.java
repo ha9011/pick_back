@@ -1,7 +1,6 @@
 package com.toy.pick.component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toy.pick.api.service.login.dto.UserInfo;
 import io.jsonwebtoken.*;
@@ -9,17 +8,13 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 @Component
 @Slf4j
@@ -66,13 +61,13 @@ public class JwtTokenProvider {
 
     public String validateAndRefreshAccessToken(String refreshToken) {
         // Refresh Token의 유효성 검증
-        if (validateToken(refreshToken)) {
+        if (this.validateToken(refreshToken)) {
             // Refresh Token이 유효하면 새로운 Access Token 발급
             UserInfo allPayload = getAllPayload(refreshToken);
             return createAccessToken(allPayload);
         } else {
             // Refresh Token이 유효하지 않으면 예외 처리 또는 다른 처리 수행
-            throw new JwtException("유효하지 않은 토큰입니다.");
+            throw new JwtException("유효하지 않은 토큰입니다. 다시 로그인해 주세요.");
         }
     }
 
@@ -85,7 +80,7 @@ public class JwtTokenProvider {
             String payloadJson = om.writeValueAsString(claims);
             return om.readValue(payloadJson, UserInfo.class);
         } catch (JwtException e) {
-            throw new RuntimeException("유효하지 않은 토큰입니다.");
+            throw new RuntimeException("유효하지 않은 토큰입니다. 다시 로그인해 주세요."); // TODO customException 만들기
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -96,7 +91,7 @@ public class JwtTokenProvider {
         try {
             return (String) Jwts.parserBuilder().setSigningKey(scretkey).build().parseClaimsJws(tokenWithoutBearer).getBody().get("userId");
         } catch (JwtException e) {
-            throw new JwtException("유효하지 않은 토큰입니다.");
+            throw new JwtException("유효하지 않은 토큰입니다. 다시 로그인해 주세요.");
         }
     }
     public String getJwtPayloadProvider(String token) {
@@ -105,7 +100,7 @@ public class JwtTokenProvider {
         try {
             return (String) Jwts.parserBuilder().setSigningKey(scretkey).build().parseClaimsJws(tokenWithoutBearer).getBody().get("provider");
         } catch (JwtException e) {
-            throw new JwtException("유효하지 않은 토큰입니다.");
+            throw new JwtException("유효하지 않은 토큰입니다. 다시 로그인해 주세요.");
         }
     }
 
@@ -113,8 +108,10 @@ public class JwtTokenProvider {
         try {
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(scretkey).build().parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
-        } catch ( JwtException | IllegalArgumentException e) {
-            throw new JwtException("유효하지 않은 토큰입니다.");
+        } catch(ExpiredJwtException e){
+            return false;
+        }catch ( JwtException | IllegalArgumentException e) {
+            throw new JwtException("유효하지 않은 토큰입니다. 다시 로그인해 주세요.");
         }
     }
 }

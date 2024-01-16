@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ApiControllerAdvice {
 
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(JwtException.class)
-    public ApiResponse<Object> jwtException(JwtException e){
-        System.out.println("-----jwtException----");
-        System.out.println(e.getMessage());
-        System.out.println(e);
-
-        return ApiResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
-    }
+//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+//    @ExceptionHandler(JwtException.class)
+//    public ApiResponse<Object> jwtException(JwtException e){
+//        System.out.println("-----jwtException----");
+//        System.out.println(e.getMessage());
+//        System.out.println(e);
+//
+//        return ApiResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage(), null);
+//    }
 }
