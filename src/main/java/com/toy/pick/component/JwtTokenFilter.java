@@ -34,8 +34,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try{
 
-            System.out.println("=======");
-            System.out.println(request.getRequestURI());
 
             // TODO 테스트용 -> 추후 삭제
             if (request.getRequestURI().equals("/v1/api/index.html")){
@@ -100,15 +98,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             boolean validateYn = jwtTokenProvider.validateToken(accessToken);
             if(!validateYn){
 
-                System.out.println("-- access 만료 --");
 
                 // DB 에서 리프레시 토큰 값 가져오기
 
                 Member member = memberService.findUserByAccessToken(accessToken);
                 String refreshToken = member.getRefreshToken();
                 String accessToken1 = member.getAccessToken();
-                System.out.println("----accessToken1---");
-                System.out.println(accessToken1);
                 // 유효성 검증 후 재발급
                 String newAccessToken = jwtTokenProvider.validateAndRefreshAccessToken(refreshToken);
                 memberService.updateAccessToken(member.getId(), newAccessToken);

@@ -29,7 +29,6 @@ public class SampleController {
 
         try{
             GetSampleResDto getSampleResDto = sampleService.selectSampleByName(paramsDto);
-            System.out.println(getSampleResDto.toString());
             return ApiResponse.ok(getSampleResDto);
         }catch (Exception e){
             throw new Exception();

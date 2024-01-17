@@ -113,7 +113,6 @@ public class LoginService {
         log.info(res.getBody());
         if(res.getStatusCode().is2xxSuccessful()){
             OauthTokenDto oauthTokenDto = om.readValue(res.getBody(), OauthTokenDto.class);
-            System.out.println(oauthTokenDto.getAccess_token());
             return oauthTokenDto.getAccess_token(); // sns accessToken
         }else{
             log.error("소셜 로그인에 실패 했습니다. 응답 코드: {}", res.getStatusCode()); // TODO 명칭변경, error handler 만들기
