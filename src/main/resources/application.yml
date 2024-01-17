@@ -62,7 +62,7 @@ logging:
 oauth2:
   providers:
     naver:
-      client-id: GMJQom1G_6DMHniuYD2y
+      client-id: 5ReL6MDjzvIBn2Am4gy9
       client-secret: ${NAVER_SECRET_KEY}
       redirect-uri: http://localhost:8080/v1/api/login/oauth2/code/naver
       token-uri: https://nid.naver.com/oauth2.0/token
@@ -136,7 +136,7 @@ springdoc:  # https://springdoc.org/#properties 문서 참고
 oauth2:
   providers:
     naver:
-      client-id: GMJQom1G_6DMHniuYD2y
+      client-id: 5ReL6MDjzvIBn2Am4gy9
       client-secret: ${NAVER_SECRET_KEY}
       redirect-uri: http://localhost:8080/v1/api/login/oauth2/code/naver
       token-uri: https://nid.naver.com/oauth2.0/token
@@ -196,7 +196,7 @@ logging:
 oauth2:
   providers:
     naver:
-      client-id: GMJQom1G_6DMHniuYD2y
+      client-id: 5ReL6MDjzvIBn2Am4gy9
       client-secret: test_key
       redirect-uri: http://localhost:8080/v1/api/login/oauth2/code/naver
       token-uri: https://nid.naver.com/oauth2.0/token
