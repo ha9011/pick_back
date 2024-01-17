@@ -1,5 +1,6 @@
 package com.toy.pick.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
@@ -14,8 +15,11 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public abstract class BaseEntity {
     @CreatedDate
-    private LocalDateTime createdDateTime;
+    private LocalDateTime createdAt;
     @LastModifiedDate
-    private LocalDateTime modifiedDateTime;
+    private LocalDateTime updatedAt;
+
+    @Column(nullable = true)
+    private LocalDateTime deletedAt;
 }
 

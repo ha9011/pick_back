@@ -12,6 +12,7 @@ import com.toy.pick.component.Oauth2Properties;
 import com.toy.pick.domain.Oauth.OauthAttributes;
 import com.toy.pick.domain.user.Member;
 import com.toy.pick.domain.user.MemberRepository;
+import com.toy.pick.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -42,6 +43,7 @@ public class LoginService {
 
     private final MemberRepository memberRepository;
 
+    @Transactional
     public ApiResponse<JwtTokenRes> loginSnsOauth(String provider, String code) throws JsonProcessingException {
 
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
@@ -119,7 +121,7 @@ public class LoginService {
         }
     }
 
-    public ApiResponse<Object> userTokenInfo(String accessToken) {
+    public ApiResponse<UserInfo> userTokenInfo(String accessToken) {
         UserInfo allPayload = jwtTokenProvider.getAllPayload(accessToken);
 
         return ApiResponse.ok(allPayload);

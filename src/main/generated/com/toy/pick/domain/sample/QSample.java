@@ -22,16 +22,19 @@ public class QSample extends EntityPathBase<Sample> {
     public final com.toy.pick.domain.QBaseEntity _super = new com.toy.pick.domain.QBaseEntity(this);
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdDateTime = _super.createdDateTime;
-
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedDateTime = _super.modifiedDateTime;
+    public final DateTimePath<java.time.LocalDateTime> deletedAt = _super.deletedAt;
+
+    public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath name = createString("name");
 
     public final EnumPath<SampleStatus> sampleStatus = createEnum("sampleStatus", SampleStatus.class);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QSample(String variable) {
         super(Sample.class, forVariable(variable));

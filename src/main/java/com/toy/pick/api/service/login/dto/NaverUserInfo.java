@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NaverUserInfo {
+public class NaverUserInfo implements SnsUserInfo {
     private String id;
 }

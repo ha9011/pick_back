@@ -22,7 +22,7 @@ public class UserInfo {
 
 
     // TODO <- 다형성으로 만들기
-    public static UserInfo of(NaverUserInfo userInfo, String provider){
+    public static UserInfo of(SnsUserInfo userInfo, String provider){
         return UserInfo.builder()
                 .userId(userInfo.getId())
                 .provider(provider)

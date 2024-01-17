@@ -82,7 +82,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 return;
             }
 
-            filterChain.doFilter(request, response);
+            //filterChain.doFilter(request, response);
         }catch (Exception e){
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType("application/json");
