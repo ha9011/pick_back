@@ -1,12 +1,14 @@
 package com.toy.pick.api;
 
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.lang.annotation.Annotation;
 
 @Getter
+@ToString
 public class ApiResponse<T>  {
     private final HttpStatus status; // 2XX, 4XX ...
     private final int code;

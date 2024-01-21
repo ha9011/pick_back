@@ -29,5 +29,12 @@ public class UserInfo {
                 .build();
     }
 
+    public static UserInfo of(String userId, String provider){
+        return UserInfo.builder()
+                .userId(userId)
+                .provider(provider)
+                .build();
+    }
+
 }
 

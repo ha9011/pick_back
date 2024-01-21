@@ -31,6 +31,7 @@ public class JwtTokenProvider {
 
 
     public String createAccessToken(UserInfo payload) {
+        System.out.println("accessTokenValidTime : " + accessTokenValidTime);
         LocalDateTime expirationDateTime = LocalDateTime.now().plusHours(accessTokenValidTime);
          return createToken(payload, expirationDateTime);
     }
@@ -40,8 +41,8 @@ public class JwtTokenProvider {
         return createToken(payload, expirationDateTime);
     }
 
-    private String createToken(UserInfo userInfo, LocalDateTime expirationDateTime) {
-
+    public String createToken(UserInfo userInfo, LocalDateTime expirationDateTime) {
+        System.out.println("scretkey : " + scretkey);
         byte[] keyBytes = Decoders.BASE64.decode(scretkey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
 

@@ -7,6 +7,7 @@ import com.toy.pick.api.service.login.dto.OauthPropertiesDto;
 import com.toy.pick.api.service.login.dto.OauthTokenDto;
 import com.toy.pick.api.service.login.dto.UserInfo;
 import com.toy.pick.api.service.login.response.JwtTokenRes;
+import com.toy.pick.api.service.sns.SnsLoginService;
 import com.toy.pick.component.JwtTokenProvider;
 import com.toy.pick.component.Oauth2Properties;
 import com.toy.pick.domain.Oauth.OauthAttributes;
@@ -36,25 +37,24 @@ import java.util.Map;
 public class LoginService {
 
     private final Oauth2Properties oauth2Properties;
-    private final ObjectMapper om;
-    private final RestTemplate restTemplate = new RestTemplate();
 
     private final JwtTokenProvider jwtTokenProvider;
 
     private final MemberRepository memberRepository;
 
-    @Transactional
-    public ApiResponse<JwtTokenRes> loginSnsOauth(String provider, String code) throws JsonProcessingException {
+    private final SnsLoginService snsLoginService;
 
-        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+    @Transactional
+    public JwtTokenRes loginSnsOauth(String provider, String code) throws JsonProcessingException {
+
         Map<String, OauthPropertiesDto> OauthProperties = oauth2Properties.getProviders();
         OauthPropertiesDto oauthProperties = OauthProperties.get(provider); // 해당 소셜에 대한 Oauth 정보
 
         // Provider 에게 토큰 획득 하기
-        String snsAccessToken = this.getSnsAccessToken(code, oauthProperties);
+        String snsAccessToken = snsLoginService.getSnsAccessToken(code, oauthProperties);
 
         // 획득한 토큰으로 사용자 정도 얻기
-        UserInfo userInfo = this.getSnsUserInfo(snsAccessToken, oauthProperties, provider);
+        UserInfo userInfo = snsLoginService.getSnsUserInfo(snsAccessToken, oauthProperties, provider);
 
         // JWT 만들기
         String accessToken = jwtTokenProvider.createAccessToken(userInfo);
@@ -71,58 +71,15 @@ public class LoginService {
             member.updateAccessToken(accessToken);
         }
 
-        return ApiResponse.ok(JwtTokenRes.of(accessToken, refreshToken));
+        return JwtTokenRes.of(accessToken, refreshToken);
     }
 
-    private UserInfo getSnsUserInfo(String accessToken, OauthPropertiesDto oauthProperties, String provider) throws JsonProcessingException {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer "+ accessToken);
 
-        HttpEntity request = new HttpEntity(headers);
-        RestTemplate restTemplate = new RestTemplate();
 
-        String url = oauthProperties.getUserInfoUri();
-        ResponseEntity<String> res = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                request,
-                String.class
-        );
 
-        log.info(res.getBody());
-        if(res.getStatusCode().is2xxSuccessful()){
-            Map<String, Object> resultMap = om.readValue(res.getBody(), Map.class);
-            return OauthAttributes.fromString(provider).of(resultMap, provider);
-        }else{
-            log.error("소셜 로그인에 실패 했습니다. 응답 코드: {}", res.getStatusCode()); // TODO 명칭변경, error handler 만들기
-            throw new HttpClientErrorException(res.getStatusCode(), "소셜 로그인에 실패 했습니다.");
-        }
-    };
-
-    private String getSnsAccessToken(String code, OauthPropertiesDto oauthProperties) throws JsonProcessingException {
-        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-
-        parameters.add("code", code);
-        parameters.add("grant_type", "authorization_code");
-        parameters.add("client_id", oauthProperties.getClientId());
-        parameters.add("client_secret", oauthProperties.getClientSecret());
-
-        String url = oauthProperties.getTokenUri();
-
-        ResponseEntity<String> res = restTemplate.postForEntity(url, parameters, String.class);
-        log.info(res.getBody());
-        if(res.getStatusCode().is2xxSuccessful()){
-            OauthTokenDto oauthTokenDto = om.readValue(res.getBody(), OauthTokenDto.class);
-            return oauthTokenDto.getAccess_token(); // sns accessToken
-        }else{
-            log.error("소셜 로그인에 실패 했습니다. 응답 코드: {}", res.getStatusCode()); // TODO 명칭변경, error handler 만들기
-            throw new HttpClientErrorException(res.getStatusCode(), "소셜 로그인에 실패 했습니다.");
-        }
-    }
-
-    public ApiResponse<UserInfo> userTokenInfo(String accessToken) {
+    public UserInfo userTokenInfo(String accessToken) {
         UserInfo allPayload = jwtTokenProvider.getAllPayload(accessToken);
 
-        return ApiResponse.ok(allPayload);
+        return allPayload;
     }
 }

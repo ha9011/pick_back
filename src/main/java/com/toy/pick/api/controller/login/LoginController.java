@@ -32,10 +32,11 @@ public class LoginController {
     @GetMapping("/login/oauth2/code/{provider}")
     public ApiResponse<JwtTokenRes> LoginOauth(
             @Parameter(name = "provider", description = "sns로그인종류", required = true) @PathVariable String provider,
-            @Parameter(name = "code", description = "OAuth2 로그인 후, provider가 제공한 코드", required = true)                @RequestParam String code
+            @Parameter(name = "code", description = "OAuth2 로그인 후, provider가 제공한 코드", required = true) @RequestParam String code
     ) throws Exception {
         try {
-            return loginService.loginSnsOauth(provider, code);
+            JwtTokenRes jwtTokenRes = loginService.loginSnsOauth(provider, code);
+            return ApiResponse.ok(jwtTokenRes);
         } catch (CustomException e) {
             throw new CustomException(e.getMessage());
         } catch (Exception e) {
@@ -55,7 +56,9 @@ public class LoginController {
             @RequestHeader("Authorization") String accessToken
             ) throws Exception {
         try {
-            return loginService.userTokenInfo(accessToken);
+
+            UserInfo userInfoApiRes = loginService.userTokenInfo(accessToken);
+            return ApiResponse.ok(userInfoApiRes);
         } catch (CustomException e) {
             throw new CustomException(e.getMessage());
         } catch (Exception e) {
