@@ -1,4 +1,4 @@
-package com.toy.pick.domain.user;
+package com.toy.pick.domain.member;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -15,7 +15,7 @@ import com.querydsl.core.types.Path;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QMember extends EntityPathBase<Member> {
 
-    private static final long serialVersionUID = -18756733L;
+    private static final long serialVersionUID = -1699251116L;
 
     public static final QMember member = new QMember("member1");
 

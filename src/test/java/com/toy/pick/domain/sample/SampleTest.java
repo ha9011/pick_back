@@ -41,7 +41,6 @@ class SampleTest {
                 .fetchOne();
 
         // when
-        System.out.println("result : "+ result);
         // then
         assertThat(result).isEqualTo(sample);
     }

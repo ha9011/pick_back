@@ -1,32 +1,19 @@
 package com.toy.pick.api.service.login;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.toy.pick.api.ApiResponse;
 import com.toy.pick.api.service.login.dto.OauthPropertiesDto;
-import com.toy.pick.api.service.login.dto.OauthTokenDto;
 import com.toy.pick.api.service.login.dto.UserInfo;
 import com.toy.pick.api.service.login.response.JwtTokenRes;
 import com.toy.pick.api.service.sns.SnsLoginService;
 import com.toy.pick.component.JwtTokenProvider;
 import com.toy.pick.component.Oauth2Properties;
-import com.toy.pick.domain.Oauth.OauthAttributes;
-import com.toy.pick.domain.user.Member;
-import com.toy.pick.domain.user.MemberRepository;
-import com.toy.pick.exception.CustomException;
+import com.toy.pick.domain.member.Member;
+import com.toy.pick.domain.member.MemberRepository;
+import com.toy.pick.domain.member.NickName;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
@@ -56,17 +43,30 @@ public class LoginService {
         // 획득한 토큰으로 사용자 정도 얻기
         UserInfo userInfo = snsLoginService.getSnsUserInfo(snsAccessToken, oauthProperties, provider);
 
-        // JWT 만들기
-        String accessToken = jwtTokenProvider.createAccessToken(userInfo);
-        String refreshToken = jwtTokenProvider.createRefreshToken(userInfo);
-
         // DB 가입
         // 1. 이미 가입됐는지 확인,
         Member member = memberRepository.findByUserId(userInfo.getUserId());
+        String accessToken = null;
+        String refreshToken = null;
         if(member == null){ // 새로 생성
-            Member createdMember = Member.create(userInfo.getUserId(), userInfo.getProvider(), "닉네임", accessToken, refreshToken);
+
+            // 맴버 먼저 생성
+            // 맴버 PK 추출 후, payload에 추가하여
+            // access & refresh Token 생성
+            String nickname = NickName.makeNickname(); // TODO enum 값 설정하기
+            Member createdMember = Member.create(userInfo.getUserId(), userInfo.getProvider(), nickname);
+            UserInfo.of(createdMember.getId(), userInfo.getUserId(), userInfo.getProvider());
+            // JWT 만들기
+            accessToken = jwtTokenProvider.createAccessToken(userInfo);
+            refreshToken = jwtTokenProvider.createRefreshToken(userInfo);
+            member.updateRefreshToken(refreshToken);
+            member.updateAccessToken(accessToken);
+
+
             memberRepository.save(createdMember);
-        }else{ // 토큰 업데이트 업데이트
+        }else{ // 토큰 업데이트
+            accessToken = jwtTokenProvider.createAccessToken(userInfo);
+            refreshToken = jwtTokenProvider.createRefreshToken(userInfo);
             member.updateRefreshToken(refreshToken);
             member.updateAccessToken(accessToken);
         }

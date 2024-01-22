@@ -9,8 +9,8 @@ import com.toy.pick.api.service.login.response.JwtTokenRes;
 import com.toy.pick.api.service.sns.SnsLoginService;
 import com.toy.pick.component.JwtTokenProvider;
 import com.toy.pick.component.Oauth2Properties;
-import com.toy.pick.domain.user.Member;
-import com.toy.pick.domain.user.MemberRepository;
+import com.toy.pick.domain.member.Member;
+import com.toy.pick.domain.member.MemberRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -92,7 +92,7 @@ class LoginServiceTest {
         String snsAccessToken = "sns_access_token";
         String accessToken = "accessToken";
         String refreshToken = "refreshToken";
-        UserInfo userInfo = UserInfo.of("hadong", provider);
+        UserInfo userInfo = UserInfo.of(1L,"hadong", provider);
 
         // when
         when(oauth2Properties.getProviders()).thenReturn(oauth2PropertieMap);
@@ -100,7 +100,7 @@ class LoginServiceTest {
         when(snsLoginService.getSnsUserInfo(eq(snsAccessToken), eq(oauthProperties), eq(provider))).thenReturn(userInfo);
         doReturn(accessToken).when(jwtTokenProvider).createAccessToken(userInfo);
         doReturn(refreshToken).when(jwtTokenProvider).createRefreshToken(userInfo);
-        when(memberRepository.findByUserId(eq("hadong"))).thenReturn(new Member("","","","",""));
+        when(memberRepository.findByUserId(eq("hadong"))).thenReturn(new Member("","",""));
 
         JwtTokenRes jwtTokenRes = loginService.loginSnsOauth(provider, code);
         // then
@@ -113,16 +113,25 @@ class LoginServiceTest {
     @DisplayName("AccessToken에서 Payload 정보 가져오기")
     void userTokenInfo() {
         // given
-
+        //when(oauth2Properties.getProviders()).thenReturn(oauth2PropertieMap);
+        // BDD로 변경하기
+        when(jwtTokenProvider.getAccessTokenValidTime()).thenReturn(1L);
+        when(jwtTokenProvider.getScretkey()).thenReturn("jwtTestKeyjwtTestKeyjwtTestKeyjwtTestKeyjwtTestKeyjwtTestKey");
 
         // 유저 생성
-        UserInfo userInfo = UserInfo.of("test_id", "naver");
+        UserInfo userInfo = UserInfo.of(1L,"test_id", "naver");
         String accessToken = jwtTokenProvider.createAccessToken(userInfo);
-        //loginService.loginSnsOauth("");
         System.out.println("accessToken : " + accessToken);
+
+
         // when
+        UserInfo payloadInfoByAccessToken = loginService.userTokenInfo(accessToken);
 
 
         // then
+        assertThat(payloadInfoByAccessToken).extracting(
+                "id", "userId", "provider"
+        ).contains(userInfo.getId(), userInfo.getUserId(), userInfo.getProvider());
+
     }
 }

@@ -1,12 +1,10 @@
-package com.toy.pick.api.service.user;
+package com.toy.pick.api.service.member;
 
-import com.toy.pick.domain.user.Member;
-import com.toy.pick.domain.user.MemberRepository;
+import com.toy.pick.domain.member.Member;
+import com.toy.pick.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)

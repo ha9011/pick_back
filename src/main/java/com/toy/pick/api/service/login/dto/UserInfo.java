@@ -4,18 +4,22 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.Map;
 
 @Getter
+@ToString
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserInfo {
+    private  Long id; // Member entity id(pk)
     private  String userId;
     private  String provider;
 
     @Builder
-    public UserInfo(String userId, String provider) {
+    public UserInfo(Long id, String userId, String provider) {
+        this.id = id;
         this.userId = userId;
         this.provider = provider;
     }
@@ -29,8 +33,9 @@ public class UserInfo {
                 .build();
     }
 
-    public static UserInfo of(String userId, String provider){
+    public static UserInfo of(Long id, String userId, String provider){
         return UserInfo.builder()
+                .id(id)
                 .userId(userId)
                 .provider(provider)
                 .build();

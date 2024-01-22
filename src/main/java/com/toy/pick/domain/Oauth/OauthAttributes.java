@@ -27,7 +27,6 @@ public enum OauthAttributes {
         @Override
         public UserInfo of(Map<String, Object> attributes, String provider) throws JsonProcessingException {
             ObjectMapper objectMapper = new ObjectMapper();
-            System.out.println("---response--");
             Object response = attributes.get("response");
             String json = objectMapper.writeValueAsString(response);
             NaverUserInfo naverUserInfo = objectMapper.readValue(json, NaverUserInfo.class);

@@ -1,4 +1,4 @@
-package com.toy.pick.domain.user;
+package com.toy.pick.domain.member;
 
 import com.toy.pick.domain.BaseEntity;
 import jakarta.persistence.*;
@@ -27,10 +27,8 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String nickname; // 닉네임
 
-    @Column(nullable = false)
     private String accessToken;
 
-    @Column(nullable = false)
     private String refreshToken;
 
     @Column(columnDefinition = "boolean default false")
@@ -40,16 +38,14 @@ public class Member extends BaseEntity {
     public void updateRefreshToken(String refreshToken){
         this.refreshToken = refreshToken;
     }
-    public Member(String userId, String provider, String nickname, String accessToken, String refreshToken) {
+    public Member(String userId, String provider, String nickname) {
         this.userId = userId;
         this.provider = provider;
         this.nickname = nickname;
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
     }
 
-    public static Member create(String userId, String provider, String nickname, String accessToken, String refreshToken){
-        return new Member(userId, provider, nickname, accessToken, refreshToken);
+    public static Member create(String userId, String provider, String nickname){
+        return new Member(userId, provider, nickname);
     }
 
     public void updateAccessToken(String accessToken) {

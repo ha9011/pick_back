@@ -3,8 +3,8 @@ package com.toy.pick.component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toy.pick.api.ApiResponse;
 import com.toy.pick.api.service.login.response.JwtTokenRes;
-import com.toy.pick.api.service.user.MemberService;
-import com.toy.pick.domain.user.Member;
+import com.toy.pick.api.service.member.MemberService;
+import com.toy.pick.domain.member.Member;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
