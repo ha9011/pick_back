@@ -102,9 +102,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
                 Member member = memberService.findUserByAccessToken(accessToken);
                 String refreshToken = member.getRefreshToken();
-                String accessToken1 = member.getAccessToken();
+                //String accessToken1 = member.getAccessToken();
                 // 유효성 검증 후 재발급
-                String newAccessToken = jwtTokenProvider.validateAndRefreshAccessToken(refreshToken);
+                String newAccessToken = jwtTokenProvider.validateRefreshAndCreateAccessToken(refreshToken);
                 memberService.updateAccessToken(member.getId(), newAccessToken);
 
                 return newAccessToken;

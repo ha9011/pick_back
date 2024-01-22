@@ -66,7 +66,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String validateAndRefreshAccessToken(String refreshToken) {
+    public String validateRefreshAndCreateAccessToken(String refreshToken) {
         // Refresh Token의 유효성 검증
         if (this.validateToken(refreshToken)) {
             // Refresh Token이 유효하면 새로운 Access Token 발급
@@ -91,6 +91,16 @@ public class JwtTokenProvider {
             throw new RuntimeException("유효하지 않은 토큰입니다. 다시 로그인해 주세요."); // TODO customException 만들기
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
+        }
+    }
+    public Long getJwtPayloadId(String token) {
+        String tokenWithoutBearer = token.replace("Bearer ", "");
+
+        try {
+            String getScretkey = this.getScretkey();
+            return (Long) Jwts.parserBuilder().setSigningKey(getScretkey).build().parseClaimsJws(tokenWithoutBearer).getBody().get("id");
+        } catch (JwtException e) {
+            throw new JwtException("유효하지 않은 토큰입니다. 다시 로그인해 주세요.");
         }
     }
     public String getJwtPayloadUserId(String token) {

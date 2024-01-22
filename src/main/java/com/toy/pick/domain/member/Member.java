@@ -51,4 +51,8 @@ public class Member extends BaseEntity {
     public void updateAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
+
+    public void hasSeenTutorial(){
+        this.tutorialYn = true;
+    }
 }
