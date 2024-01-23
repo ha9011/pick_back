@@ -1,5 +1,6 @@
 package com.toy.pick.domain.collection;
 
+import com.toy.pick.api.controller.collection.request.PostMyCollectionsReq;
 import com.toy.pick.domain.BaseEntity;
 import com.toy.pick.domain.member.Member;
 import jakarta.persistence.*;
@@ -41,6 +42,15 @@ public class Collection extends BaseEntity {
         this.member = member;
     }
 
+    public static Collection create(PostMyCollectionsReq req, Member member){
+        return Collection.builder()
+                .title(req.getTitle())
+                .memo(req.getMemo())
+                .status(CollectionStatus.valueOf(req.getStatus()))
+                .isDeletableYn(true)
+                .member(member)
+                .build();
+    }
     // 맴버 계정 생성시, 최초 생성되는 기본 컬랙션
     public static Collection defaultCreate(Member member){
         return Collection.builder()

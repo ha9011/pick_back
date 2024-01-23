@@ -1,6 +1,7 @@
 package com.toy.pick.api.controller.collection;
 
 import com.toy.pick.api.ApiResponse;
+import com.toy.pick.api.controller.collection.request.PostMyCollectionsReq;
 import com.toy.pick.api.service.collection.CollectionService;
 import com.toy.pick.api.service.collection.response.MyCollectionsRes;
 import com.toy.pick.api.service.login.response.JwtTokenRes;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +42,6 @@ public class CollectionController {
         try {
             Long id = jwtTokenProvider.getJwtPayloadId(accessToken);
             List<MyCollectionsRes> myCollections = collectionService.getMyCollections(id);
-            System.out.println(myCollections.toString());
             return ApiResponse.ok(myCollections);
         } catch (CustomException e) {
             throw new CustomException(e.getMessage());
@@ -56,15 +57,15 @@ public class CollectionController {
                     content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
     @PostMapping("/collection/my")
-    public ApiResponse<List<MyCollectionsRes>> PostMyCollections(
+    public ApiResponse<MyCollectionsRes> PostMyCollections(
             @Parameter(example = "accesstoken", description ="상단에 Authorize로 등록하면, 아무값 넣어도 상관없음(swagger)" )
-            @RequestHeader("Authorization") String accessToken
+            @RequestHeader("Authorization") String accessToken,
+            @RequestBody @Valid PostMyCollectionsReq postMyCollectionsReq
     ) throws Exception {
         try {
             Long id = jwtTokenProvider.getJwtPayloadId(accessToken);
-            List<MyCollectionsRes> myCollections = collectionService.getMyCollections(id);
-            System.out.println(myCollections.toString());
-            return ApiResponse.ok(myCollections);
+            MyCollectionsRes myCollection = collectionService.createCollection(postMyCollectionsReq, id);
+            return ApiResponse.ok(myCollection);
         } catch (CustomException e) {
             throw new CustomException(e.getMessage());
         } catch (Exception e) {

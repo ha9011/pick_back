@@ -9,6 +9,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -25,5 +27,11 @@ public class MemberCollection extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "collection_id")
     private Collection collection;
+
+    // 썌얘
+
+    private String url;
+    private String memo;
+    private LocalDateTime approach50mAt;
 
 }

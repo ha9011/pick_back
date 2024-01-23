@@ -36,12 +36,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
             // TODO 테스트용 -> 추후 삭제
             if (request.getRequestURI().equals("/v1/api/index.html")){
-                log.info("---filter검증--- 시작1");
                 filterChain.doFilter(request, response);
                 return;
             }
+
             if (request.getRequestURI().startsWith("/v1/api/h2-console")){
-                log.info("---filter검증--- 시작2");
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -74,7 +73,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
                 JwtTokenRes jwtTokenRes = JwtTokenRes.of(newAccessToken, null);
-                String json = new ObjectMapper().writeValueAsString(ApiResponse.of(HttpStatus.OK, jwtTokenRes, "REFRESH"));
+                String json = new ObjectMapper().writeValueAsString(ApiResponse.of(HttpStatus.OK, jwtTokenRes, "REFRESH" , "REFRESH"));
                 response.getWriter().write(json);
                 return;
             }
@@ -84,7 +83,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            String json = new ObjectMapper().writeValueAsString(ApiResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage(), "UNAUTHORIZED"));
+            String json = new ObjectMapper().writeValueAsString(ApiResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage(), "UNAUTHORIZED","UNAUTHORIZED"));
             response.getWriter().write(json);
             return ;
         }
