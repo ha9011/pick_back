@@ -98,10 +98,11 @@ public class JwtTokenProvider {
 
         try {
             String getScretkey = this.getScretkey();
-            return (Long) Jwts.parserBuilder().setSigningKey(getScretkey).build().parseClaimsJws(tokenWithoutBearer).getBody().get("id");
+            return Long.parseLong((String) Jwts.parserBuilder().setSigningKey(getScretkey).build().parseClaimsJws(tokenWithoutBearer).getBody().get("id"));
         } catch (JwtException e) {
             throw new JwtException("유효하지 않은 토큰입니다. 다시 로그인해 주세요.");
         }
+
     }
     public String getJwtPayloadUserId(String token) {
         String tokenWithoutBearer = token.replace("Bearer ", "");

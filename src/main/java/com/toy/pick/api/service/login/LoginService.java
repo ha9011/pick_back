@@ -7,6 +7,8 @@ import com.toy.pick.api.service.login.response.JwtTokenRes;
 import com.toy.pick.api.service.sns.SnsLoginService;
 import com.toy.pick.component.JwtTokenProvider;
 import com.toy.pick.component.Oauth2Properties;
+import com.toy.pick.domain.collection.Collection;
+import com.toy.pick.domain.collection.CollectionRepository;
 import com.toy.pick.domain.member.Member;
 import com.toy.pick.domain.member.MemberRepository;
 import com.toy.pick.domain.member.NickName;
@@ -30,6 +32,8 @@ public class LoginService {
     private final MemberRepository memberRepository;
 
     private final SnsLoginService snsLoginService;
+
+    private final CollectionRepository collectionRepository;
 
     @Transactional
     public JwtTokenRes loginSnsOauth(String provider, String code) throws JsonProcessingException {
@@ -55,18 +59,25 @@ public class LoginService {
             // access & refresh Token 생성
             String nickname = NickName.makeNickname(); // TODO enum 값 설정하기
             Member createdMember = Member.create(userInfo.getUserId(), userInfo.getProvider(), nickname);
-            UserInfo.of(createdMember.getId(), userInfo.getUserId(), userInfo.getProvider());
+            Member newMember = memberRepository.save(createdMember);
+            UserInfo payLoad = UserInfo.of(newMember.getId(), newMember.getUserId(), newMember.getProvider());
+
             // JWT 만들기
-            accessToken = jwtTokenProvider.createAccessToken(userInfo);
-            refreshToken = jwtTokenProvider.createRefreshToken(userInfo);
-            member.updateRefreshToken(refreshToken);
-            member.updateAccessToken(accessToken);
+            accessToken = jwtTokenProvider.createAccessToken(payLoad);
+            refreshToken = jwtTokenProvider.createRefreshToken(payLoad);
+            newMember.updateAccessToken(accessToken);
+            newMember.updateRefreshToken(refreshToken);
+
+            //기본 컬랙션 생성
+            Collection newCollection = Collection.defaultCreate(newMember);
+            collectionRepository.save(newCollection);
 
 
-            memberRepository.save(createdMember);
         }else{ // 토큰 업데이트
-            accessToken = jwtTokenProvider.createAccessToken(userInfo);
-            refreshToken = jwtTokenProvider.createRefreshToken(userInfo);
+
+            UserInfo payLoad = UserInfo.of(member.getId(), member.getUserId(), member.getProvider());
+            accessToken = jwtTokenProvider.createAccessToken(payLoad);
+            refreshToken = jwtTokenProvider.createRefreshToken(payLoad);
             member.updateRefreshToken(refreshToken);
             member.updateAccessToken(accessToken);
         }

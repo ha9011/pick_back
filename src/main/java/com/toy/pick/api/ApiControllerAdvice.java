@@ -23,6 +23,9 @@ public class ApiControllerAdvice {
     @ExceptionHandler(Exception.class)
     public ApiResponse<Object> exceptionHandler(Exception e){
         log.info(":::Exception Handler:::");
+        log.info(":::Exception Handler::: " + e.getMessage());
+
+
         return ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage(), "FAIL");
     }
 

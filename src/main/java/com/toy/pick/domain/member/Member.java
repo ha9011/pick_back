@@ -1,11 +1,15 @@
 package com.toy.pick.domain.member;
 
 import com.toy.pick.domain.BaseEntity;
+import com.toy.pick.domain.collection.Collection;
+import com.toy.pick.domain.memberCollection.MemberCollection;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -34,6 +38,11 @@ public class Member extends BaseEntity {
     @Column(columnDefinition = "boolean default false")
     private Boolean tutorialYn = false;
 
+    @OneToMany(mappedBy = "member")
+    private List<MemberCollection> memberCollections; // 팔로우
+
+    @OneToMany(mappedBy = "member")
+    private List<Collection> collections; // 팔로우
 
     public void updateRefreshToken(String refreshToken){
         this.refreshToken = refreshToken;
