@@ -3,9 +3,11 @@ package com.toy.pick.api.service.member.response;
 
 import com.toy.pick.domain.member.Member;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.security.PublicKey;
 
+@Getter
 public class GetUserInfoByIdRes {
     private final Long id;
     private final String nickName;
