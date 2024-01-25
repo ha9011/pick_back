@@ -12,7 +12,7 @@ public class GetUserInfoByIdRes {
     private final Long id;
     private final String nickName;
 
-    private final Boolean tutorialYn;
+    private final boolean tutorialYn;
 
     @Builder
     public GetUserInfoByIdRes(Long id, String nickName, Boolean tutorialYn) {

@@ -2,10 +2,14 @@ package com.toy.pick.domain.collection;
 
 import com.toy.pick.api.controller.collection.request.PostMyCollectionsReq;
 import com.toy.pick.domain.BaseEntity;
+import com.toy.pick.domain.collectionPlace.CollectionPlace;
+import com.toy.pick.domain.common.ItemStatus;
 import com.toy.pick.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,7 +26,7 @@ public class Collection extends BaseEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private CollectionStatus status; // 노말
+    private ItemStatus status; // 노말
 
     private String memo;
 
@@ -30,11 +34,14 @@ public class Collection extends BaseEntity {
     private boolean isDeletableYn; // 기본 칼럼은 삭제 할 수 없다.
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name="member_id")
     private Member member;
 
+    @OneToMany(mappedBy = "collection")
+    private List<CollectionPlace> collectionPlaces;
+
     @Builder
-    public Collection(String title, CollectionStatus status, String memo, boolean isDeletableYn, Member member) {
+    public Collection(String title, ItemStatus status, String memo, boolean isDeletableYn, Member member) {
         this.title = title;
         this.status = status;
         this.memo = memo;
@@ -46,7 +53,7 @@ public class Collection extends BaseEntity {
         return Collection.builder()
                 .title(req.getTitle())
                 .memo(req.getMemo())
-                .status(CollectionStatus.valueOf(req.getStatus()))
+                .status(ItemStatus.valueOf(req.getStatus()))
                 .isDeletableYn(true)
                 .member(member)
                 .build();
@@ -56,7 +63,7 @@ public class Collection extends BaseEntity {
         return Collection.builder()
                 .title("기본")
                 .memo("")
-                .status(CollectionStatus.PRIVATE)
+                .status(ItemStatus.PRIVATE)
                 .isDeletableYn(false)
                 .member(member)
                 .build();

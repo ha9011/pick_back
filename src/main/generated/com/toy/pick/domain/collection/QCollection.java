@@ -24,6 +24,8 @@ public class QCollection extends EntityPathBase<Collection> {
 
     public final com.toy.pick.domain.QBaseEntity _super = new com.toy.pick.domain.QBaseEntity(this);
 
+    public final ListPath<com.toy.pick.domain.collectionPlace.CollectionPlace, com.toy.pick.domain.collectionPlace.QCollectionPlace> collectionPlaces = this.<com.toy.pick.domain.collectionPlace.CollectionPlace, com.toy.pick.domain.collectionPlace.QCollectionPlace>createList("collectionPlaces", com.toy.pick.domain.collectionPlace.CollectionPlace.class, com.toy.pick.domain.collectionPlace.QCollectionPlace.class, PathInits.DIRECT2);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
@@ -38,7 +40,7 @@ public class QCollection extends EntityPathBase<Collection> {
 
     public final StringPath memo = createString("memo");
 
-    public final EnumPath<CollectionStatus> status = createEnum("status", CollectionStatus.class);
+    public final EnumPath<com.toy.pick.domain.common.ItemStatus> status = createEnum("status", com.toy.pick.domain.common.ItemStatus.class);
 
     public final StringPath title = createString("title");
 

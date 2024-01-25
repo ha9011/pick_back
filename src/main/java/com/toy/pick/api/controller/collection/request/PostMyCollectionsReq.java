@@ -1,7 +1,5 @@
 package com.toy.pick.api.controller.collection.request;
 
-import com.toy.pick.domain.collection.CollectionStatus;
-import com.toy.pick.domain.member.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
