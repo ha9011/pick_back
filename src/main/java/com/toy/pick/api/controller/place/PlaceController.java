@@ -41,8 +41,8 @@ public class PlaceController {
 
             System.out.println("-----postCollectionPlace------");
             System.out.println("req : " + req.toString());
-
-            return placeService.test(req);
+            placeService.test(req);
+            return null;
         } catch (CustomException e) {
             throw new CustomException(e.getMessage());
         } catch (Exception e) {

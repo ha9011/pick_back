@@ -16,4 +16,12 @@ public class PlaceImage extends BaseEntity {
     private Long id;
 
     private String path;
+
+    public PlaceImage(String path) {
+        this.path = path;
+    }
+
+    public static PlaceImage create(String path){
+        return new PlaceImage(path);
+    }
 }

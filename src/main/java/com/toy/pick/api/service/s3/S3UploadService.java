@@ -2,17 +2,15 @@ package com.toy.pick.api.service.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.toy.pick.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.Charsets;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import java.net.URLDecoder;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -24,31 +22,39 @@ public class S3UploadService {
 
     @Value("${cloud.aws.s3.bucket.name}")
     private String bucket;
-    public String saveFile(MultipartFile multipartFile) throws IOException {
-        String originalFilename = multipartFile.getOriginalFilename();
+    @Value("${cloud.aws.s3.path.basic}")
+    private String basicPath;
+    public String saveFile(MultipartFile multipartFile, Long id)  {
 
-        multipartFile.getContentType();
-        System.out.println("originalFilename : "+ originalFilename);
+        try{
+            multipartFile.getContentType();
 
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(multipartFile.getSize());
-        metadata.setContentType(multipartFile.getContentType());
-        //metadata.setContentDisposition("attachment; filename='"+originalFilename+"'");
-        System.out.println("bucket : " + bucket);
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(multipartFile.getSize());
+            metadata.setContentType(multipartFile.getContentType());
 
-        amazonS3.putObject(bucket, originalFilename, multipartFile.getInputStream(), metadata);
+            // UUID 생성
+            String uniqueFileName = UUID.randomUUID().toString();
 
-        String string = amazonS3.getUrl(bucket, originalFilename).toString();
-        System.out.println(string);
-        String encode = URLEncoder.encode(string, Charsets.UTF_8);
-        System.out.println(encode);
+            // buckit + 환경명 + place(Pk)
+            String basicBuckitDir = bucket + "/" + basicPath + "/" + id;
 
-        // S3 업로드 확인
-        // TODO 파일명 등 커스텀 해보자.
-        // UUID로 해볼까, 랜덤값으로 파일명할까.
-        // 폴더명으로 관리하는게 좋을거 같음.
-        return null;
+            // TODO 파일명 고민해보기 curr : uuid + 기본파일명
+            String fileName = uniqueFileName + "-" + multipartFile.getOriginalFilename();
+
+
+            // 저장
+            amazonS3.putObject(basicBuckitDir, fileName, multipartFile.getInputStream(), metadata);
+
+            // 경로 호출
+            String string = amazonS3.getUrl(bucket, fileName).toString();
+
+            // 한글, 띄어쓰기 경우 파일명깨짐 -> 디코딩하기
+            String decodedFileName = URLDecoder.decode(string, "UTF-8");
+            log.info(decodedFileName);
+            return decodedFileName;
+        }catch (Exception e){
+            throw new CustomException("파일 업로드에 실패했습니다.");
+        }
     }
-
-
 }
