@@ -42,6 +42,7 @@ public class S3UploadService {
         System.out.println(string);
         String encode = URLEncoder.encode(string, Charsets.UTF_8);
         System.out.println(encode);
+
         // S3 업로드 확인
         // TODO 파일명 등 커스텀 해보자.
         // UUID로 해볼까, 랜덤값으로 파일명할까.
