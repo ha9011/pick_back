@@ -40,7 +40,7 @@ public class QPlace extends EntityPathBase<Place> {
 
     public final StringPath name = createString("name");
 
-    public final ListPath<com.toy.pick.domain.placeImage.PlaceImage, com.toy.pick.domain.placeImage.QPlaceImage> placeImage = this.<com.toy.pick.domain.placeImage.PlaceImage, com.toy.pick.domain.placeImage.QPlaceImage>createList("placeImage", com.toy.pick.domain.placeImage.PlaceImage.class, com.toy.pick.domain.placeImage.QPlaceImage.class, PathInits.DIRECT2);
+    public final ListPath<com.toy.pick.domain.placeImage.PlaceImage, com.toy.pick.domain.placeImage.QPlaceImage> placeImages = this.<com.toy.pick.domain.placeImage.PlaceImage, com.toy.pick.domain.placeImage.QPlaceImage>createList("placeImages", com.toy.pick.domain.placeImage.PlaceImage.class, com.toy.pick.domain.placeImage.QPlaceImage.class, PathInits.DIRECT2);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;

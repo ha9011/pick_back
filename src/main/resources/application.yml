@@ -82,6 +82,17 @@ jwt:
     key: ${JWT_SECRET_KEY}
 
 
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket:
+        name: ${BUCKET_NAME}
+
 
 ############ dev ###########
 ---
@@ -155,6 +166,16 @@ jwt:
   secret:
     key: ${JWT_SECRET_KEY}
 
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket:
+        name: ${BUCKET_NAME}
 
 ############ test ###########
 ---
@@ -215,7 +236,16 @@ jwt:
   secret:
     key: jwtTestKeyjwtTestKeyjwtTestKeyjwtTestKeyjwtTestKeyjwtTestKey
 
-
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket:
+        name: ${BUCKET_NAME}
 #spring:
 #  config:
 #    activate:
