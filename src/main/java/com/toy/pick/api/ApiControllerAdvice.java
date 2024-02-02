@@ -15,26 +15,26 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ApiControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(CustomException.class)
-    public ApiResponse<Object> customExceptionHandler(CustomException e){
+    public ApiResponseDto<Object> customExceptionHandler(CustomException e){
         log.info(":::CustomException Handler:::");
-        return ApiResponse.of(HttpStatus.BAD_REQUEST,null, e.getMessage(), "FAIL");
+        return ApiResponseDto.of(HttpStatus.BAD_REQUEST,null, e.getMessage(), "FAIL");
     }
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(Exception.class)
-    public ApiResponse<Object> exceptionHandler(Exception e){
+    public ApiResponseDto<Object> exceptionHandler(Exception e){
         log.info(":::Exception Handler:::");
         log.info(":::Exception Handler::: " + e.getMessage());
 
 
-        return ApiResponse.of(HttpStatus.BAD_REQUEST, null,e.getMessage(), "FAIL");
+        return ApiResponseDto.of(HttpStatus.BAD_REQUEST, null,e.getMessage(), "FAIL");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ApiResponse<String> controllerReqBodyValidationErrHandler(MethodArgumentNotValidException exception) {
+    public ApiResponseDto<String> controllerReqBodyValidationErrHandler(MethodArgumentNotValidException exception) {
         BindingResult bindingResult = exception.getBindingResult();
         String defaultMessage = bindingResult.getFieldError().getField()+"은(는) "+bindingResult.getFieldError().getDefaultMessage();
-        return ApiResponse.of(HttpStatus.BAD_REQUEST, null, defaultMessage, "FAIL");
+        return ApiResponseDto.of(HttpStatus.BAD_REQUEST, null, defaultMessage, "FAIL");
     }
 
 //    @ResponseStatus(HttpStatus.UNAUTHORIZED)

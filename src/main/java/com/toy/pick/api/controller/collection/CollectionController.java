@@ -1,17 +1,16 @@
 package com.toy.pick.api.controller.collection;
 
-import com.toy.pick.api.ApiResponse;
+import com.toy.pick.api.ApiResponseDto;
 import com.toy.pick.api.controller.collection.request.PostMyCollectionsReq;
 import com.toy.pick.api.service.collection.CollectionService;
 import com.toy.pick.api.service.collection.response.MyCollectionsRes;
-import com.toy.pick.api.service.login.response.JwtTokenRes;
 import com.toy.pick.component.JwtTokenProvider;
-import com.toy.pick.domain.collection.Collection;
 import com.toy.pick.exception.CustomException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -30,19 +29,19 @@ public class CollectionController {
 
     @Operation(summary = "내 컬렉션 조회", description = "내 컬렉션 조회")
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Ok", useReturnTypeSchema = true),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "BAD_REQUEST", useReturnTypeSchema = true,
-                    content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Ok", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", useReturnTypeSchema = true,
+                    content = @Content(schema = @Schema(implementation = ApiResponseDto.class))),
     })
     @GetMapping("/collection/my")
-    public ApiResponse<List<MyCollectionsRes>> getMyCollections(
+    public ApiResponseDto<List<MyCollectionsRes>> getMyCollections(
             @Parameter(example = "accesstoken", description ="상단에 Authorize로 등록하면, 아무값 넣어도 상관없음(swagger)" )
             @RequestHeader("Authorization") String accessToken
     ) throws Exception {
         try {
             Long id = jwtTokenProvider.getJwtPayloadId(accessToken);
             List<MyCollectionsRes> myCollections = collectionService.getMyCollections(id);
-            return ApiResponse.ok(myCollections);
+            return ApiResponseDto.ok(myCollections);
         } catch (CustomException e) {
             throw new CustomException(e.getMessage());
         } catch (Exception e) {
@@ -52,12 +51,12 @@ public class CollectionController {
 
     @Operation(summary = "내 컬렉션 생성", description = "내 컬렉션 생성")
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Ok", useReturnTypeSchema = true),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "BAD_REQUEST", useReturnTypeSchema = true,
-                    content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Ok", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", useReturnTypeSchema = true,
+                    content = @Content(schema = @Schema(implementation = ApiResponseDto.class))),
     })
     @PostMapping("/collection/my")
-    public ApiResponse<MyCollectionsRes> PostMyCollections(
+    public ApiResponseDto<MyCollectionsRes> PostMyCollections(
             @Parameter(example = "accesstoken", description ="상단에 Authorize로 등록하면, 아무값 넣어도 상관없음(swagger)" )
             @RequestHeader("Authorization") String accessToken,
             @RequestBody @Valid PostMyCollectionsReq postMyCollectionsReq
@@ -65,7 +64,7 @@ public class CollectionController {
         try {
             Long id = jwtTokenProvider.getJwtPayloadId(accessToken);
             MyCollectionsRes myCollection = collectionService.createCollection(postMyCollectionsReq, id);
-            return ApiResponse.ok(myCollection);
+            return ApiResponseDto.ok(myCollection);
         } catch (CustomException e) {
             throw new CustomException(e.getMessage());
         } catch (Exception e) {

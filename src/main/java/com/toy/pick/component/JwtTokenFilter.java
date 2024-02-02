@@ -1,7 +1,7 @@
 package com.toy.pick.component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.toy.pick.api.ApiResponse;
+import com.toy.pick.api.ApiResponseDto;
 import com.toy.pick.api.service.login.response.JwtTokenRes;
 import com.toy.pick.api.service.member.MemberService;
 import com.toy.pick.domain.member.Member;
@@ -73,7 +73,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
                 JwtTokenRes jwtTokenRes = JwtTokenRes.of(newAccessToken, null);
-                String json = new ObjectMapper().writeValueAsString(ApiResponse.of(HttpStatus.OK, jwtTokenRes, "REFRESH" , "REFRESH"));
+                String json = new ObjectMapper().writeValueAsString(ApiResponseDto.of(HttpStatus.OK, jwtTokenRes, "REFRESH" , "REFRESH"));
                 response.getWriter().write(json);
                 return;
             }
@@ -83,7 +83,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            String json = new ObjectMapper().writeValueAsString(ApiResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage(), "UNAUTHORIZED","UNAUTHORIZED"));
+            String json = new ObjectMapper().writeValueAsString(ApiResponseDto.of(HttpStatus.UNAUTHORIZED, e.getMessage(), "UNAUTHORIZED","UNAUTHORIZED"));
             response.getWriter().write(json);
             return ;
         }

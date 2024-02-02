@@ -9,14 +9,14 @@ import java.lang.annotation.Annotation;
 
 @Getter
 @ToString
-public class ApiResponse<T>  {
+public class ApiResponseDto<T>  {
     private final HttpStatus status; // 2XX, 4XX ...
     private final int code;
     private final String StatusMessage;
     private final String message;
     private final T data;
 
-    public ApiResponse(HttpStatus httpStatus,  String message, T data, String statusMessage) {
+    public ApiResponseDto(HttpStatus httpStatus,  String message, T data, String statusMessage) {
         this.code = httpStatus.value();
         this.status = httpStatus;
         this.message = message;
@@ -26,12 +26,12 @@ public class ApiResponse<T>  {
 
 
 
-    public static <T> ApiResponse<T> of(HttpStatus httpStatus, T data, String message, String statusMessage) {
-        return new ApiResponse<>(httpStatus, message, data, statusMessage);
+    public static <T> ApiResponseDto<T> of(HttpStatus httpStatus, T data, String message, String statusMessage) {
+        return new ApiResponseDto<>(httpStatus, message, data, statusMessage);
     }
 
 
-    public static <T> ApiResponse<T> ok(T data) {
+    public static <T> ApiResponseDto<T> ok(T data) {
         return of(HttpStatus.OK, data, "SUCCESS","SUCCESS");
     }
 

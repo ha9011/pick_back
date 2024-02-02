@@ -1,11 +1,8 @@
 package com.toy.pick.api.service.login.response;
 
-import com.toy.pick.api.ApiResponse;
-import com.toy.pick.api.service.login.dto.UserInfo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-import org.springframework.http.HttpStatus;
 
 @Getter
 @ToString

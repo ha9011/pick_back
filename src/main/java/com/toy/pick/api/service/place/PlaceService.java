@@ -1,6 +1,5 @@
 package com.toy.pick.api.service.place;
 
-import com.toy.pick.api.ApiResponse;
 import com.toy.pick.api.controller.place.request.PostCollectionPlaceReq;
 import com.toy.pick.api.service.member.response.GetUserInfoByIdRes;
 import com.toy.pick.api.service.s3.S3UploadService;
@@ -28,11 +27,12 @@ public class PlaceService {
     private final PlaceImageRepository placeImageRepository;
 
     @Transactional
-    public void test(PostCollectionPlaceReq req) throws IOException {
+    public Place savePlaceWithImage(PostCollectionPlaceReq req) throws IOException {
 
         Place place = Place.create(req);
         Place newPlace = placeRepository.save(place);
         List<PlaceImage> placeImages = new ArrayList<>();
+
         // 2. s3 저장 후 파일 경로 호출 -> 저장
         for (MultipartFile file : req.getFiles()) {
             String path = s3UploadService.saveFile(file, newPlace.getId());
@@ -42,6 +42,8 @@ public class PlaceService {
         }
 
         newPlace.updatePlaceImg(placeImages);
+
+        return newPlace;
 
     }
 }
