@@ -23,14 +23,13 @@ public class CollectionPlaceService {
     private final CollectionRepository collectionRepository;
 
 
-    @Transactional
-    public CollectionPlace savedCollectionPlace(Place place, Long collectionId){
+    public void savedCollectionPlace(Place place, Long collectionId){
         Collection collection = collectionRepository.findById(collectionId).orElseThrow(
                 () -> new CustomException("존재하지 않은 콜렉션입니다.")
         );
 
         CollectionPlace collectionPlace = CollectionPlace.create(collection, place);
-        return collectionPlaceRepository.save(collectionPlace);
+        collectionPlaceRepository.save(collectionPlace);
     }
 
 

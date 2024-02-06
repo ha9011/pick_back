@@ -28,10 +28,4 @@ public class MemberCollection extends BaseEntity {
     @JoinColumn(name = "collection_id")
     private Collection collection;
 
-    // 썌얘
-
-    private String url;
-    private String memo;
-    private LocalDateTime approach50mAt;
-
 }

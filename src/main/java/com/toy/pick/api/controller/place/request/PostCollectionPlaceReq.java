@@ -47,7 +47,16 @@ public class PostCollectionPlaceReq {
     @Schema(description = "장소 이미지(최대 6개)")
     private final List<MultipartFile> files;
 
-    public PostCollectionPlaceReq(Long collectionId, String name, String address, String detailAddress, String x, String y, String category, String itemStatus, List<MultipartFile> files) {
+    // TODO 변경될 가능성 있음
+    @Schema(description = "나의 장소 메모")
+    private final String memo;
+
+    @Schema(description = "나의 장소 URL")
+    private final String url;
+
+
+
+    public PostCollectionPlaceReq(Long collectionId, String name, String address, String detailAddress, String x, String y, String category, String itemStatus, List<MultipartFile> files, String memo, String url) {
         this.collectionId = collectionId;
         this.name = name;
         this.address = address;
@@ -57,5 +66,7 @@ public class PostCollectionPlaceReq {
         this.category = category;
         this.itemStatus = itemStatus;
         this.files = files;
+        this.memo = memo;
+        this.url = url;
     }
 }
