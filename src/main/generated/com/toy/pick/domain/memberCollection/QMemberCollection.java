@@ -24,8 +24,6 @@ public class QMemberCollection extends EntityPathBase<MemberCollection> {
 
     public final com.toy.pick.domain.QBaseEntity _super = new com.toy.pick.domain.QBaseEntity(this);
 
-    public final DateTimePath<java.time.LocalDateTime> approach50mAt = createDateTime("approach50mAt", java.time.LocalDateTime.class);
-
     public final com.toy.pick.domain.collection.QCollection collection;
 
     //inherited
@@ -38,12 +36,8 @@ public class QMemberCollection extends EntityPathBase<MemberCollection> {
 
     public final com.toy.pick.domain.member.QMember member;
 
-    public final StringPath memo = createString("memo");
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
-
-    public final StringPath url = createString("url");
 
     public QMemberCollection(String variable) {
         this(MemberCollection.class, forVariable(variable), INITS);

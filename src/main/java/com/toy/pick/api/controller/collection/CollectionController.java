@@ -29,7 +29,7 @@ public class CollectionController {
 
     @Operation(summary = "내 컬렉션 조회", description = "내 컬렉션 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Ok", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", useReturnTypeSchema = true,
                     content = @Content(schema = @Schema(implementation = ApiResponseDto.class))),
     })

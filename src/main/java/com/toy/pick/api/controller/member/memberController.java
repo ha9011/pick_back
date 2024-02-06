@@ -29,9 +29,9 @@ public class memberController {
 
     @Operation(description = "로그인 유저 정보 가져오기")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "FAIL",
-                    content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
+                    content =  @Content(schema = @Schema(implementation = ApiResponseDto.class)))
     })
     @GetMapping("/member/me")
     public ApiResponseDto<GetUserInfoByIdRes> getMemberInfo(
@@ -51,7 +51,7 @@ public class memberController {
 
     @Operation(description = "튜토리얼 시작하기 체크 버튼")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "FAIL",
                     content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
     })

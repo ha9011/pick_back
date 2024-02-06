@@ -1,5 +1,6 @@
 package com.toy.pick.api;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.http.HttpStatus;
@@ -10,15 +11,15 @@ import java.lang.annotation.Annotation;
 @Getter
 @ToString
 public class ApiResponseDto<T>  {
-    private final HttpStatus status; // 2XX, 4XX ...
-    private final int code;
+    private final String status;  // TODO 삭제 할듯??
+    private final int code;  // 2XX, 4XX ...
     private final String StatusMessage;
     private final String message;
     private final T data;
 
     public ApiResponseDto(HttpStatus httpStatus,  String message, T data, String statusMessage) {
         this.code = httpStatus.value();
-        this.status = httpStatus;
+        this.status = httpStatus.name();
         this.message = message;
         this.data = data;
         this.StatusMessage = statusMessage;

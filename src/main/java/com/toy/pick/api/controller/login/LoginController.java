@@ -26,7 +26,7 @@ public class LoginController {
 
     @Operation(summary = "로그인", description = "소셜로그인을 통해 provider에게 받은 code를 백앤드에 전달")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Ok", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", useReturnTypeSchema = true,
                     content = @Content(schema = @Schema(implementation = ApiResponseDto.class))),
     })
@@ -47,7 +47,7 @@ public class LoginController {
 
     @Operation(description = "토큰의 payload 가져오기 - 테스트용")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Ok", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST",
                     content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
     })

@@ -28,7 +28,7 @@ public class PlaceController {
 
     @Operation(description = "컬렉션에 해당 장소 추가")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "FAIL", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
     })
     @PostMapping("/place/collection")
@@ -56,7 +56,7 @@ public class PlaceController {
 //
 //    @Operation(description = "컬렉션에 해당하는 장소 정보 조회")
 //    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
+//            @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
 //            @ApiResponse(responseCode = "400", description = "FAIL", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
 //    })
 //    @GetMapping("/place/collection")
