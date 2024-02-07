@@ -49,7 +49,7 @@ public class PlaceService {
         for (MultipartFile file : req.getFiles()) {
             String path = s3UploadService.saveFile(file, newPlace.getId());
             PlaceImage placeImage = PlaceImage.create(path);
-            PlaceImage savedPlaceImage = placeImageRepository.save(placeImage);
+            PlaceImage savedPlaceImage = placeImageRepository.save(placeImage); // TODO saveAll 로 변경하기
             placeImages.add(savedPlaceImage);
         }
 

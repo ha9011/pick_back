@@ -2,7 +2,6 @@ package com.toy.pick.api.service.login;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.toy.pick.api.ApiResponse;
 import com.toy.pick.api.service.login.dto.OauthPropertiesDto;
 import com.toy.pick.api.service.login.dto.UserInfo;
 import com.toy.pick.api.service.login.response.JwtTokenRes;

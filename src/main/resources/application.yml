@@ -200,6 +200,7 @@ spring:
     console: # H2 DB
       enabled: true           # H2 Console
       path: /h2-console       # H2 Console
+
   jpa:
     hibernate:
       ddl-auto: create
@@ -243,15 +244,15 @@ jwt:
 cloud:
   aws:
     credentials:
-      access-key: ${AWS_ACCESS_KEY}
-      secret-key: ${AWS_SECRET_KEY}
+      access-key: AWS_ACCESS_KEY
+      secret-key: AWS_SECRET_KEY
     region:
       static: ap-northeast-2
     s3:
       path:
         basic: test
       bucket:
-        name: ${BUCKET_NAME}
+        name: BUCKET_NAME
 #spring:
 #  config:
 #    activate:

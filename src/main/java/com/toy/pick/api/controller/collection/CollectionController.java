@@ -3,6 +3,7 @@ package com.toy.pick.api.controller.collection;
 import com.toy.pick.api.ApiResponseDto;
 import com.toy.pick.api.controller.collection.request.PostMyCollectionsReq;
 import com.toy.pick.api.service.collection.CollectionService;
+import com.toy.pick.api.service.collection.response.FollowCollectionRes;
 import com.toy.pick.api.service.collection.response.MyCollectionsRes;
 import com.toy.pick.component.JwtTokenProvider;
 import com.toy.pick.exception.CustomException;
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,9 +51,33 @@ public class CollectionController {
         }
     };
 
+    @Operation(summary = "팔로잉 컬렉션 조회", description = "팔로잉 컬렉션 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", useReturnTypeSchema = true,
+                    content = @Content(schema = @Schema(implementation = ApiResponseDto.class))),
+    })
+    @GetMapping("/collection/my/follow")
+    public ApiResponseDto<List<FollowCollectionRes>> getFolloCollections(
+            @Parameter(example = "accesstoken", description ="상단에 Authorize로 등록하면, 아무값 넣어도 상관없음(swagger)" )
+            @RequestHeader("Authorization") String accessToken
+    ) throws Exception {
+        try {
+            Long id = jwtTokenProvider.getJwtPayloadId(accessToken);
+            List<FollowCollectionRes> myCollections = collectionService.getFollowCollections(id);
+            return ApiResponseDto.ok(myCollections);
+        } catch (CustomException e) {
+            throw new CustomException(e.getMessage());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    };
+
+
+
     @Operation(summary = "내 컬렉션 생성", description = "내 컬렉션 생성")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Ok", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", useReturnTypeSchema = true,
                     content = @Content(schema = @Schema(implementation = ApiResponseDto.class))),
     })
@@ -65,6 +91,30 @@ public class CollectionController {
             Long id = jwtTokenProvider.getJwtPayloadId(accessToken);
             MyCollectionsRes myCollection = collectionService.createCollection(postMyCollectionsReq, id);
             return ApiResponseDto.ok(myCollection);
+        } catch (CustomException e) {
+            throw new CustomException(e.getMessage());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    };
+
+    @Operation(summary = "내 컬렉션 삭제", description = "내 컬렉션 삭제")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", useReturnTypeSchema = true,
+                    content = @Content(schema = @Schema(implementation = ApiResponseDto.class))),
+    })
+    @DeleteMapping("/collection/my")
+    public ApiResponseDto<Object> deleteMyCollections(
+            @Parameter(example = "accesstoken", description ="상단에 Authorize로 등록하면, 아무값 넣어도 상관없음(swagger)" )
+            @RequestHeader("Authorization") String accessToken,
+            @Parameter(example = "1", description ="삭제할 컬렉션 아이디, (기본 컬렉션은 삭제 X)" )
+            @RequestParam Long cId
+    ) throws Exception {
+        try {
+            Long id = jwtTokenProvider.getJwtPayloadId(accessToken);
+            collectionService.removeMyCollection(cId, id);
+            return ApiResponseDto.of(HttpStatus.OK, null, "컬렉션을 삭제하였습니다.","SUCCESS"  );
         } catch (CustomException e) {
             throw new CustomException(e.getMessage());
         } catch (Exception e) {

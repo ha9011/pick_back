@@ -2,11 +2,15 @@ package com.toy.pick.api.service.collection;
 
 
 import com.toy.pick.api.controller.collection.request.PostMyCollectionsReq;
+import com.toy.pick.api.service.collection.response.FollowCollectionRes;
 import com.toy.pick.api.service.collection.response.MyCollectionsRes;
 import com.toy.pick.domain.collection.Collection;
 import com.toy.pick.domain.collection.CollectionRepository;
+import com.toy.pick.domain.common.ItemStatus;
 import com.toy.pick.domain.member.Member;
 import com.toy.pick.domain.member.MemberRepository;
+import com.toy.pick.domain.memberCollection.MemberCollection;
+import com.toy.pick.domain.memberCollection.MemberCollectionRepository;
 import com.toy.pick.exception.CustomException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +28,7 @@ import java.util.stream.Collectors;
 public class CollectionService {
     private final CollectionRepository collectionRepository;
     private final MemberRepository memberRepository;
+    private final MemberCollectionRepository memberCollectionRepository;
 
 
     public List<MyCollectionsRes> getMyCollections(Long memberId) {
@@ -47,5 +52,38 @@ public class CollectionService {
         return memberRepository.findById(memberId).orElseThrow(
                 ()-> new CustomException("존재하지않는 맴버입니다.")
         );
+    }
+
+    public void removeMyCollection(Long cId, Long id) {
+        Member member = this.findMemberById(id);
+
+        Collection collection = collectionRepository.findById(cId).orElseThrow(
+                () -> new CustomException("해당 컬렉션은 존재하지 않습니다.")
+        );
+
+        Member registeredMember = collection.getMember();
+        if (!member.equals(registeredMember)) {
+            throw new CustomException("해당 컬렉션을 등록한 유저가 아닙니다.");
+        }
+
+        boolean isDeletableYn = collection.isDeletableYn();
+
+        // 기본 컬렉션은 False 으로 되어있다.  // TODO 변수명 변경하자. Yn 삭제
+        if(isDeletableYn){
+            collectionRepository.delete(collection);
+        }else{
+            throw new CustomException("기본 컬렉션은 삭제 할 수없습니다.");
+        }
+    }
+
+    public List<FollowCollectionRes> getFollowCollections(Long id) {
+        Member memberWithFollowCollection = memberRepository.findByMemberWithFollowCollection(id);
+
+        List<MemberCollection> memberCollections = memberWithFollowCollection.getMemberCollections(); // n+1 의심
+        List<Collection> collects = memberCollections.stream().map(MemberCollection::getCollection).collect(Collectors.toList());
+        return collects.stream()
+                .filter(c-> c.getStatus().equals(ItemStatus.PUBLIC))
+                .map(FollowCollectionRes::of)
+                .collect(Collectors.toList());
     }
 }

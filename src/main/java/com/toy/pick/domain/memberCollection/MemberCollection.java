@@ -6,6 +6,7 @@ import com.toy.pick.domain.collection.Collection;
 import com.toy.pick.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,4 +29,16 @@ public class MemberCollection extends BaseEntity {
     @JoinColumn(name = "collection_id")
     private Collection collection;
 
+    @Builder
+    public MemberCollection(Member member, Collection collection) {
+        this.member = member;
+        this.collection = collection;
+    }
+
+    public static MemberCollection create(Member member, Collection collection){
+        return MemberCollection.builder()
+                .member(member)
+                .collection(collection)
+                .build();
+    }
 }
