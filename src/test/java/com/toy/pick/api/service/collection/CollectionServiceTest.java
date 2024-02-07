@@ -10,27 +10,25 @@ import com.toy.pick.domain.memberCollection.MemberCollection;
 import com.toy.pick.domain.memberCollection.MemberCollectionRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
 @Rollback(value = false)
-@Transactional
 class CollectionServiceTest {
 
 
@@ -46,6 +44,12 @@ class CollectionServiceTest {
     @PersistenceContext
     private EntityManager em;
 
+    @AfterEach
+    void tearDown() {
+//        memberCollectionRepository.deleteAllInBatch();
+//        collectionRepository.deleteAllInBatch();
+//        memberRepository.deleteAllInBatch();
+    }
 
     @Test
     @DisplayName("내가 다른 사람의 컬렉션을 팔로우 한다.")
@@ -71,7 +75,8 @@ class CollectionServiceTest {
         MemberCollection followB3 = createFollow(memberA, cB3);
         memberCollectionRepository.saveAll(List.of(followB1, followB2, followB3));
 
-        em.clear();
+        //em.clear();
+        // @Transaction 안에서  <- ( 설정시 )
         // 이미 영속성컨텍스트에 엔티티가 존재하면, 여러 값들을 격납하고 재조회해도, 기존에 있던걸로 다시 재이용할 뿐
         // DB에서 가져오지 않는다. 따라서. 연관관계 상호작용 메서드를 만들어서 관리하는게 유용하다.
         //https://velog.io/@ddangle/%EC%96%91%EB%B0%A9%ED%96%A5-%EC%97%B0%EA%B4%80%EA%B4%80%EA%B3%84%EC%9D%98-%ED%97%88%EC%A0%90
@@ -105,5 +110,49 @@ class CollectionServiceTest {
 
     public MemberCollection  createFollow(Member member, Collection collection){
         return MemberCollection.create(member, collection);
+    }
+
+    @Test
+    @DisplayName("나의 팔로우 제거")
+    void removeMyFollowCollection() {
+
+        // given
+        Member memberA = createMember("memberA");
+        Member memberB = createMember("memberB");
+        memberRepository.saveAll(List.of(memberA, memberB));
+
+
+        Collection cA1 = createCollection("c_A_1", memberA);
+        Collection cB1 = createCollection("c_B_1", memberB);
+        Collection cB2 = createCollection("c_B_2", memberB);
+        Collection cB3 = createCollection("c_B_3", memberB);
+        collectionRepository.saveAll(List.of(cA1, cB1, cB2, cB3));
+
+        MemberCollection followB1 = createFollow(memberA, cB1);
+        MemberCollection followB2 = createFollow(memberA, cB2);
+        MemberCollection followB3 = createFollow(memberA, cB3);
+        memberCollectionRepository.saveAll(List.of(followB1, followB2, followB3));
+
+
+        // when
+        System.out.println("-----");
+        collectionService.removeMyFollowCollection(cB1.getId(), memberA.getId());
+        System.out.println("-----");
+
+
+        List<MemberCollection> memberCollections = memberCollectionRepository.findByMemberId(memberA.getId());
+
+
+
+        System.out.println("size : "+ memberCollections.size());
+        System.out.println("size : "+ memberCollections);
+
+
+        assertThat(memberCollections).hasSize(2);
+        assertThat(memberCollections).extracting("id")
+                .containsExactlyInAnyOrder(
+                         followB2.getId(),
+                         followB3.getId()
+                );
     }
 }

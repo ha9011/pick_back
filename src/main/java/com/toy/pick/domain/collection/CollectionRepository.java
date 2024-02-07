@@ -10,5 +10,4 @@ import java.util.List;
 @Repository
 public interface CollectionRepository extends JpaRepository<Collection, Long> {
     List<Collection> findAllByMember(Member member);
-
 }

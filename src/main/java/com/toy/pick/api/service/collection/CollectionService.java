@@ -33,7 +33,6 @@ public class CollectionService {
 
     public List<MyCollectionsRes> getMyCollections(Long memberId) {
         Member member = findMemberById(memberId);
-
         List<Collection> collections = collectionRepository.findAllByMember(member);
         return collections.stream().map(MyCollectionsRes::of)
                 .collect(Collectors.toList());
@@ -54,6 +53,7 @@ public class CollectionService {
         );
     }
 
+    @Transactional
     public void removeMyCollection(Long cId, Long id) {
         Member member = this.findMemberById(id);
 
@@ -76,6 +76,7 @@ public class CollectionService {
         }
     }
 
+
     public List<FollowCollectionRes> getFollowCollections(Long id) {
         Member memberWithFollowCollection = memberRepository.findByMemberWithFollowCollection(id);
 
@@ -85,5 +86,14 @@ public class CollectionService {
                 .filter(c-> c.getStatus().equals(ItemStatus.PUBLIC))
                 .map(FollowCollectionRes::of)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void removeMyFollowCollection(Long cId, Long memberId) {
+        MemberCollection memberCollection = memberCollectionRepository.findByMemberIdAndCollectionId(memberId, cId).orElseThrow(
+                () -> new CustomException("해당 팔로우는 존재하지 않습니다.")
+        );
+        System.out.println(memberCollection.getId());
+        memberCollectionRepository.delete(memberCollection);
     }
 }
