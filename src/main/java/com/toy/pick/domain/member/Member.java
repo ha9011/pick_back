@@ -36,9 +36,6 @@ public class Member extends BaseEntity {
 
     private String refreshToken;
 
-    @Column(columnDefinition = "boolean default false")
-    private boolean tutorialYn = false;
-
     @OneToMany(mappedBy = "member")
     private List<MemberCollection> memberCollections; // 팔로우
 
@@ -62,11 +59,5 @@ public class Member extends BaseEntity {
         this.accessToken = accessToken;
     }
 
-    public void hasSeenTutorial(){
-        this.tutorialYn = true;
-    }
 
-    public boolean getTutorialYn() {
-        return tutorialYn;
-    }
 }

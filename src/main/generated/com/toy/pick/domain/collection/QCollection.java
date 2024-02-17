@@ -34,7 +34,9 @@ public class QCollection extends EntityPathBase<Collection> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final BooleanPath isDeletableYn = createBoolean("isDeletableYn");
+    public final BooleanPath isDeletable = createBoolean("isDeletable");
+
+    public final DateTimePath<java.time.LocalDateTime> lastUpdateAt = createDateTime("lastUpdateAt", java.time.LocalDateTime.class);
 
     public final com.toy.pick.domain.member.QMember member;
 

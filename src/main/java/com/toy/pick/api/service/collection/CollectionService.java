@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,7 @@ public class CollectionService {
     public List<MyCollectionsRes> getMyCollections(Long memberId) {
         Member member = findMemberById(memberId);
         List<Collection> collections = collectionRepository.findAllByMember(member);
+
         return collections.stream().map(MyCollectionsRes::of)
                 .collect(Collectors.toList());
 
@@ -66,13 +68,12 @@ public class CollectionService {
             throw new CustomException("해당 컬렉션을 등록한 유저가 아닙니다.");
         }
 
-        boolean isDeletableYn = collection.isDeletableYn();
+        boolean isDeletable = collection.isDeletable();
 
-        // 기본 컬렉션은 False 으로 되어있다.  // TODO 변수명 변경하자. Yn 삭제
-        if(isDeletableYn){
+        if(isDeletable){
             collectionRepository.delete(collection);
         }else{
-            throw new CustomException("기본 컬렉션은 삭제 할 수없습니다.");
+            throw new CustomException("기본 컬렉션은 삭제 할수 없습니다.");
         }
     }
 

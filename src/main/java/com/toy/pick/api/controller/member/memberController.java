@@ -49,25 +49,5 @@ public class memberController {
         }
     };
 
-    @Operation(description = "튜토리얼 시작하기 체크 버튼")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
-            @ApiResponse(responseCode = "400", description = "FAIL",
-                    content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
-    })
-    @PutMapping("/member/tutorial/check")
-    public ApiResponseDto<Object> putTutorialCheck(
-            @Parameter(example = "accesstoken", description ="상단에 Authorize로 등록하면, 아무값 넣어도 상관없음(swagger)" )
-            @RequestHeader("Authorization") String accessToken
-    ) throws Exception {
-        try {
-            Long id = jwtTokenProvider.getJwtPayloadId(accessToken);
-            memberService.updateTutorial(id);
-            return ApiResponseDto.ok(null);
-        } catch (CustomException e) {
-            throw new CustomException(e.getMessage());
-        } catch (Exception e) {
-            throw new Exception();
-        }
-    };
+    
 }
