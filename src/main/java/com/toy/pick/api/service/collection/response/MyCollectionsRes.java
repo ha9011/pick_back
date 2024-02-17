@@ -19,25 +19,23 @@ public class MyCollectionsRes {
     private final ItemStatus status; // 노말
     private final String memo;
 
-    private final boolean isDeletableYn; // 기본 칼럼은 삭제 할 수 없다.
+    private final boolean isDeletable; // 기본 칼럼은 삭제 할 수 없다.
 
-    private final String lastUpdateTime = "최근 업데이트(TODO)"; // TODO 최근 업데이트 시점
-
+    private final String lastUpdateTime;
     @Builder
     public MyCollectionsRes(Collection collection) {
         this.id = collection.getId();
         this.title = collection.getTitle();
         this.status = collection.getStatus();
         this.memo = collection.getMemo();
-        this.isDeletableYn = collection.isDeletableYn();
-        //this.lastUpdateTime = this.transferUpdateTime(collection.getUpdatedAt());
+        this.isDeletable = collection.isDeletable();
+        this.lastUpdateTime = this.transferUpdateTime(collection.getLastUpdateAt());
     }
 
     public static MyCollectionsRes of(Collection collection){
         return new MyCollectionsRes(collection);
     }
 
-    // TODO
     String transferUpdateTime(LocalDateTime updateAt) {
 
         LocalDateTime currentTime = LocalDateTime.now();

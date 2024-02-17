@@ -35,13 +35,4 @@ public class MemberService {
         return GetUserInfoByIdRes.of(member);
     }
 
-    @Transactional
-    public void  updateTutorial(Long id) {
-        memberRepository.findById(id).ifPresentOrElse(
-                Member::hasSeenTutorial,
-                () -> {
-                    throw new CustomException("존재하지 않은 유저입니다.");
-                }
-        );
-    }
 }

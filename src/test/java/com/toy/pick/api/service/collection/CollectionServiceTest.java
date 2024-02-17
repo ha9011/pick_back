@@ -103,7 +103,7 @@ class CollectionServiceTest {
                 .title(title)
                 .member(member)
                 .memo("memo")
-                .isDeletableYn(false)
+                .isDeletable(false)
                 .status(ItemStatus.PUBLIC)
                 .build();
     }

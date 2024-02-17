@@ -25,7 +25,6 @@ public class GetUserInfoByIdRes {
         return GetUserInfoByIdRes.builder()
                 .id(member.getId())
                 .nickName(member.getNickname())
-                .tutorialYn(member.getTutorialYn())
                 .build();
     }
 }

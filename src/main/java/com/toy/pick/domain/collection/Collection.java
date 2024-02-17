@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -31,7 +32,7 @@ public class Collection extends BaseEntity {
     private String memo;
 
     @ColumnDefault("false")
-    private boolean isDeletableYn; // 기본 칼럼은 삭제 할 수 없다.
+    private boolean isDeletable; // 기본 칼럼은 삭제 할 수 없다.
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id")
@@ -40,33 +41,32 @@ public class Collection extends BaseEntity {
     @OneToMany(mappedBy = "collection")
     private List<CollectionPlace> collectionPlaces;
 
+    @Column
+    private LocalDateTime lastUpdateAt;
     @Builder
-    public Collection(String title, ItemStatus status, String memo, boolean isDeletableYn, Member member) {
+    public Collection(String title, ItemStatus status, String memo, boolean isDeletable, Member member, LocalDateTime now) {
         this.title = title;
         this.status = status;
         this.memo = memo;
-        this.isDeletableYn = isDeletableYn;
+        this.isDeletable = isDeletable;
         this.member = member;
+        this.lastUpdateAt = now;
     }
 
+
     public static Collection create(PostMyCollectionsReq req, Member member){
-        return Collection.builder()
-                .title(req.getTitle())
-                .memo(req.getMemo())
-                .status(ItemStatus.valueOf(req.getStatus()))
-                .isDeletableYn(true)
-                .member(member)
-                .build();
+        return new Collection(req.getTitle(), ItemStatus.valueOf(req.getStatus()), req.getMemo(), true, member,LocalDateTime.now());
+
     }
+
     // 맴버 계정 생성시, 최초 생성되는 기본 컬랙션
     public static Collection defaultCreate(Member member){
-        return Collection.builder()
-                .title("기본")
-                .memo("")
-                .status(ItemStatus.PRIVATE)
-                .isDeletableYn(false)
-                .member(member)
-                .build();
+        return new Collection("기본", ItemStatus.PRIVATE, "", false, member,LocalDateTime.now());
     }
+
+    public void refreshLastUpdateAt(LocalDateTime now){
+        this.lastUpdateAt = now;
+    }
+
 }
 

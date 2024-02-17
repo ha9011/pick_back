@@ -42,8 +42,6 @@ public class QMember extends EntityPathBase<Member> {
 
     public final StringPath refreshToken = createString("refreshToken");
 
-    public final BooleanPath tutorialYn = createBoolean("tutorialYn");
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
