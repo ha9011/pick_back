@@ -36,11 +36,12 @@ public class LoginService {
     private final CollectionRepository collectionRepository;
 
     @Transactional
-    public JwtTokenRes loginSnsOauth(String provider, String code) throws JsonProcessingException {
+    public JwtTokenRes loginSnsOauth(String provider, String code) throws Exception {
 
         Map<String, OauthPropertiesDto> OauthProperties = oauth2Properties.getProviders();
         OauthPropertiesDto oauthProperties = OauthProperties.get(provider); // 해당 소셜에 대한 Oauth 정보
 
+        log.info(oauthProperties.toString());
         // Provider 에게 토큰 획득 하기
         String snsAccessToken = snsLoginService.getSnsAccessToken(code, oauthProperties);
 

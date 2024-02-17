@@ -31,52 +31,61 @@ public class SnsLoginService {
 
     private final ObjectMapper om;
 
-    public String getSnsAccessToken(String code, OauthPropertiesDto oauthProperties) throws JsonProcessingException {
-        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+    public String getSnsAccessToken(String code, OauthPropertiesDto oauthProperties) throws Exception {
+        try{
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
-        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+            MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
-        parameters.add("code", code);
-        parameters.add("grant_type", "authorization_code");
-        parameters.add("client_id", oauthProperties.getClientId());
-        parameters.add("client_secret", oauthProperties.getClientSecret());
+            parameters.add("code", code);
+            parameters.add("grant_type", "authorization_code");
+            parameters.add("client_id", oauthProperties.getClientId());
+            parameters.add("client_secret", oauthProperties.getClientSecret());
 
-        String url = oauthProperties.getTokenUri();
+            String url = oauthProperties.getTokenUri();
 
-        ResponseEntity<String> res = restTemplate.postForEntity(url, parameters, String.class);
-        log.info(res.getBody());
-        if(res.getStatusCode().is2xxSuccessful()){
-            OauthTokenDto oauthTokenDto = om.readValue(res.getBody(), OauthTokenDto.class);
-            return oauthTokenDto.getAccess_token(); // sns accessToken
-        }else{
-            log.error("소셜 로그인에 실패 했습니다. 응답 코드: {}", res.getStatusCode()); // TODO 명칭변경, error handler 만들기
-            throw new HttpClientErrorException(res.getStatusCode(), "소셜 로그인에 실패 했습니다.");
+            ResponseEntity<String> res = restTemplate.postForEntity(url, parameters, String.class);
+            log.info(res.getBody());
+            if(res.getStatusCode().is2xxSuccessful()){
+                OauthTokenDto oauthTokenDto = om.readValue(res.getBody(), OauthTokenDto.class);
+                return oauthTokenDto.getAccess_token(); // sns accessToken
+            }else{
+                log.error("소셜 로그인에 실패 했습니다. 응답 코드: {}", res.getStatusCode()); // TODO 명칭변경, error handler 만들기
+                throw new HttpClientErrorException(res.getStatusCode(), "소셜 로그인에 실패 했습니다.");
+            }
+        }catch (Exception e){
+            throw new Exception(e);
         }
     }
 
-    public UserInfo getSnsUserInfo(String accessToken, OauthPropertiesDto oauthProperties, String provider) throws JsonProcessingException {
-        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+    public UserInfo getSnsUserInfo(String accessToken, OauthPropertiesDto oauthProperties, String provider) throws Exception {
+        try {
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer "+ accessToken);
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer "+ accessToken);
 
-        HttpEntity request = new HttpEntity(headers);
+            HttpEntity request = new HttpEntity(headers);
 
-        String url = oauthProperties.getUserInfoUri();
-        ResponseEntity<String> res = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                request,
-                String.class
-        );
+            String url = oauthProperties.getUserInfoUri();
+            ResponseEntity<String> res = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    request,
+                    String.class
+            );
 
-        log.info(res.getBody());
-        if(res.getStatusCode().is2xxSuccessful()){
-            Map<String, Object> resultMap = om.readValue(res.getBody(), Map.class);
-            return OauthAttributes.fromString(provider).of(resultMap, provider);
-        }else{
-            log.error("소셜 로그인에 실패 했습니다. 응답 코드: {}", res.getStatusCode()); // TODO 명칭변경, error handler 만들기
-            throw new HttpClientErrorException(res.getStatusCode(), "소셜 로그인에 실패 했습니다.");
+            log.info(res.getBody());
+            if(res.getStatusCode().is2xxSuccessful()){
+                Map<String, Object> resultMap = om.readValue(res.getBody(), Map.class);
+                return OauthAttributes.fromString(provider).of(resultMap, provider);
+            }else{
+                log.error("소셜 로그인에 실패 했습니다. 응답 코드: {}", res.getStatusCode()); // TODO 명칭변경, error handler 만들기
+                throw new HttpClientErrorException(res.getStatusCode(), "소셜 로그인에 실패 했습니다.");
+            }
+        }catch (Exception e){
+            throw new Exception(e);
         }
+
     };
 }

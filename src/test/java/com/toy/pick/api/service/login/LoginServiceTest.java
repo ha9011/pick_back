@@ -73,7 +73,7 @@ class LoginServiceTest {
 
     @Test
     @DisplayName("소셜로그인 접속 후 Code를 전달받아, pick에 이용할 access&refresh Token을 만든다.")
-    void loginSnsOauth() throws JsonProcessingException {
+    void loginSnsOauth() throws Exception {
         // given
         String provider = "naver";
         String code = "naver_code";

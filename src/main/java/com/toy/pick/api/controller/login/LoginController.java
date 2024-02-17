@@ -41,7 +41,7 @@ public class LoginController {
         } catch (CustomException e) {
             throw new CustomException(e.getMessage());
         } catch (Exception e) {
-            throw new Exception();
+            throw new Exception(e.getMessage());
         }
     };
 
