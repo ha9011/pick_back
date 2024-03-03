@@ -1,0 +1,183 @@
+<configuration>
+
+
+    <!-- 콘솔에 로그 출력 설정 -->
+
+    <springProfile name="...">
+        <property resource="application-eddie.yml" />
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>[${env}] | %d{HH:mm:ss.SSS} [%X{uuid:-startup}] [%X{test:-id}] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+        <root level="info">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+
+        <logger name="org.springframework" level = "INFO" additivity = "false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR"/>
+        </logger>
+
+        <logger name="com.zaxxer.hikari" level = "INFO" additivity = "false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR"/>
+        </logger>
+    </springProfile>
+
+
+    <springProfile name="local, test">
+        <property resource="application.yml" />
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>[${env}] | %d{HH:mm:ss.SSS} [%X{uuid:-startup}] [%X{test:-id}] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+        <root level="info">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+
+        <logger name="org.springframework" level = "INFO" additivity = "false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR"/>
+        </logger>
+
+        <logger name="com.zaxxer.hikari" level = "INFO" additivity = "false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR"/>
+        </logger>
+
+    </springProfile>
+
+    <!-- 파일에 로그 출력 설정 -->
+<!--    <springProfile name="dev, prod">-->
+    <springProfile name="eddie">
+        <appender name="FILE" class ="ch.qos.logback.core.rolling.RollingFileAppender">
+            <!-- 파일 경로 설정 -->
+            <file>/Users/hadong/log/logfile.log</file>
+
+            <!-- 로그 패턴 설정 -->
+            <encoder class = "ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <pattern>[${env}] | %d{HH:mm:ss.SSS} [%X{uuid:-startup}] [%X{test:-id}] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+
+            <!-- 롤링 정책 -->
+            <rollingPolicy class = "ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <!-- gz, zip 등을 넣을 경우 자동 로그파일 압축 -->
+                <fileNamePattern>/Users/hadong/log/collect/%d{yyyy-MM-dd}/log_%i.log</fileNamePattern>
+
+                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <!-- 파일당 최고 용량 -->
+                    <maxFileSize>10MB</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+
+                <!-- 로그파일 최대 보관주기 -->
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+        </appender>
+
+
+        <appender name = "ERROR" class ="ch.qos.logback.core.rolling.RollingFileAppender">
+            <filter class ="ch.qos.logback.classic.filter.LevelFilter">
+                <level>error</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+            <file>/Users/hadong/log/err/logfile.log</file>
+
+            <!-- 로그 패턴 설정 -->
+            <encoder class = "ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <pattern>[${env}] | %d{HH:mm:ss.SSS} [%X{uuid:-startup}] [%X{test:-id}] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+
+            <!-- 롤링 정책 -->
+            <rollingPolicy class = "ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <!-- gz, zip 등을 넣을 경우 자동 로그파일 압축 -->
+                <fileNamePattern>/Users/hadong/log/err/collect/%d{yyyy-MM-dd}/log_%i.log</fileNamePattern>
+
+                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <!-- 파일당 최고 용량 -->
+                    <maxFileSize>10MB</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+
+                <!-- 로그파일 최대 보관주기 -->
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+        </appender>
+
+        <root level = "info">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR"/>
+        </root>
+    </springProfile>
+
+
+
+</configuration>
+
+
+
+<!--<configuration>-->
+<!--<springProfile name="console-logging">-->
+<!--    <appender name="LOCAL_CONSOLE_POLICY" class="ch.qos.logback.core.ConsoleAppender">-->
+<!--        <layout class="ch.qos.logback.classic.PatternLayout">-->
+<!--            <Pattern>%d{HH:mm:ss.SSS} [%-5level] [%thread] [%logger{36}] - %m%n</Pattern>-->
+<!--        </layout>-->
+<!--    </appender>-->
+<!--</springProfile>-->
+
+<!--<springProfile name="file-info-logging">-->
+<!--    <appender name="INFO_FILE_POLICY" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter" >-->
+<!--            <level>INFO</level>-->
+<!--        </filter>-->
+<!--        <file>${LOG_PATH}/zzazan/logs/zzazan.log</file>-->
+<!--        <encoder>-->
+<!--            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5level] [%thread] [%logger{36}] - %m%n</pattern>-->
+<!--        </encoder>-->
+<!--        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">-->
+<!--            <fileNamePattern>${LOG_PATH}/zzazan/dateLog/%d{yyyy_MM_dd}_%i.zzazan.log</fileNamePattern>-->
+<!--            <maxFileSize>50MB</maxFileSize>-->
+<!--            <maxHistory>14</maxHistory>-->
+<!--            <totalSizeCap>1GB</totalSizeCap>-->
+<!--        </rollingPolicy>-->
+<!--    </appender>-->
+<!--</springProfile>-->
+
+<!--<springProfile name="file-error-logging">-->
+<!--    <appender name="ERROR_FILE_POLICY" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter" >-->
+<!--            <level>ERROR</level>-->
+<!--        </filter>-->
+<!--        <file>${LOG_PATH}/zzazan/logs/zazzan_error.log</file>-->
+<!--        <encoder>-->
+<!--            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5level] [%thread] [%logger{36}] - %m%n</pattern>-->
+<!--        </encoder>-->
+<!--        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">-->
+<!--            <fileNamePattern>${LOG_PATH}/zzazan/dateLog/%d{yyyy_MM_dd}_%i.zazzan_error.log</fileNamePattern>-->
+<!--            <maxFileSize>50MB</maxFileSize>-->
+<!--            <maxHistory>14</maxHistory>-->
+<!--            <totalSizeCap>1GB</totalSizeCap>-->
+<!--        </rollingPolicy>-->
+<!--    </appender>-->
+<!--</springProfile>-->
+
+<!--<root level="INFO">-->
+<!--    <springProfile name="console-logging">-->
+<!--        <appender-ref ref="LOCAL_CONSOLE_POLICY"/>-->
+<!--    </springProfile>-->
+
+<!--    <springProfile name="file-info-logging">-->
+<!--        <appender-ref ref="INFO_FILE_POLICY"/>-->
+<!--    </springProfile>-->
+
+<!--    <springProfile name="file-error-logging">-->
+<!--        <appender-ref ref="INFO_FILE_POLICY"/>-->
+<!--        <appender-ref ref="ERROR_FILE_POLICY"/>-->
+<!--    </springProfile>-->
+<!--</root>-->
+<!--</configuration>-->

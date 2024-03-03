@@ -12,6 +12,7 @@ server:
 
 ############ local ###########
 ---
+env: local
 spring:
   config:
     activate:
@@ -98,6 +99,7 @@ cloud:
 
 ############ dev ###########
 ---
+env: dev
 spring:
   config:
     activate:
@@ -183,6 +185,8 @@ cloud:
 
 ############ test ###########
 ---
+
+env: test
 spring:
   config:
     activate:

@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -77,7 +78,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 response.getWriter().write(json);
                 return;
             }
-
+            Member member = memberService.findUserByAccessToken(token);
+            MDC.put("test",member.getUserId());
             //filterChain.doFilter(request, response);
         }catch (Exception e){
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -88,6 +90,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             return ;
         }
         filterChain.doFilter(request, response);
+        MDC.clear();
     }
 
     private String validateToken(String accessToken, HttpServletResponse response) throws Exception {
