@@ -6,8 +6,6 @@ import com.toy.pick.domain.collection.CollectionRepository;
 import com.toy.pick.domain.common.ItemStatus;
 import com.toy.pick.domain.member.Member;
 import com.toy.pick.domain.member.MemberRepository;
-import com.toy.pick.domain.memberCollection.MemberCollection;
-import com.toy.pick.domain.memberCollection.MemberCollectionRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.AfterEach;
@@ -39,8 +37,6 @@ class CollectionServiceTest {
     private CollectionRepository collectionRepository;
     @Autowired
     private MemberRepository memberRepository;
-    @Autowired
-    private MemberCollectionRepository memberCollectionRepository;
     @PersistenceContext
     private EntityManager em;
 
@@ -70,10 +66,6 @@ class CollectionServiceTest {
         Collection cB3 = createCollection("c_B_3", memberB);
         collectionRepository.saveAll(List.of(cA1, cA2, cA3, cB1, cB2, cB3));
 
-        MemberCollection followB1 = createFollow(memberA, cB1);
-        MemberCollection followB2 = createFollow(memberA, cB2);
-        MemberCollection followB3 = createFollow(memberA, cB3);
-        memberCollectionRepository.saveAll(List.of(followB1, followB2, followB3));
 
         //em.clear();
         // @Transaction 안에서  <- ( 설정시 )
@@ -81,16 +73,8 @@ class CollectionServiceTest {
         // DB에서 가져오지 않는다. 따라서. 연관관계 상호작용 메서드를 만들어서 관리하는게 유용하다.
         //https://velog.io/@ddangle/%EC%96%91%EB%B0%A9%ED%96%A5-%EC%97%B0%EA%B4%80%EA%B4%80%EA%B3%84%EC%9D%98-%ED%97%88%EC%A0%90
 
-        // when
-        List<FollowCollectionRes> followCollections = collectionService.getFollowCollections(memberA.getId());
 
-        // then
-        assertThat(followCollections).hasSize(3).extracting("id","title","memo","lastUpdateTime")
-                .containsExactlyInAnyOrder(
-                        tuple(4L,"c_B_1","memo","최근 업데이트(TODO)"),
-                        tuple(5L,"c_B_2","memo","최근 업데이트(TODO)"),
-                        tuple(6L,"c_B_3","memo","최근 업데이트(TODO)")
-                );
+
     }
 
 
@@ -108,9 +92,7 @@ class CollectionServiceTest {
                 .build();
     }
 
-    public MemberCollection  createFollow(Member member, Collection collection){
-        return MemberCollection.create(member, collection);
-    }
+
 
     @Test
     @DisplayName("나의 팔로우 제거")
@@ -128,31 +110,8 @@ class CollectionServiceTest {
         Collection cB3 = createCollection("c_B_3", memberB);
         collectionRepository.saveAll(List.of(cA1, cB1, cB2, cB3));
 
-        MemberCollection followB1 = createFollow(memberA, cB1);
-        MemberCollection followB2 = createFollow(memberA, cB2);
-        MemberCollection followB3 = createFollow(memberA, cB3);
-        memberCollectionRepository.saveAll(List.of(followB1, followB2, followB3));
-
-
-        // when
-        System.out.println("-----");
-        collectionService.removeMyFollowCollection(cB1.getId(), memberA.getId());
-        System.out.println("-----");
-
-
-        List<MemberCollection> memberCollections = memberCollectionRepository.findByMemberId(memberA.getId());
 
 
 
-        System.out.println("size : "+ memberCollections.size());
-        System.out.println("size : "+ memberCollections);
-
-
-        assertThat(memberCollections).hasSize(2);
-        assertThat(memberCollections).extracting("id")
-                .containsExactlyInAnyOrder(
-                         followB2.getId(),
-                         followB3.getId()
-                );
     }
 }

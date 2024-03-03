@@ -2,7 +2,6 @@ package com.toy.pick.domain.member;
 
 import com.toy.pick.domain.BaseEntity;
 import com.toy.pick.domain.collection.Collection;
-import com.toy.pick.domain.memberCollection.MemberCollection;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -36,8 +35,6 @@ public class Member extends BaseEntity {
 
     private String refreshToken;
 
-    @OneToMany(mappedBy = "member")
-    private List<MemberCollection> memberCollections; // 팔로우
 
     @OneToMany(mappedBy = "member")
     private List<Collection> collections; // 팔로우

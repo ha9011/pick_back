@@ -9,8 +9,6 @@ import com.toy.pick.domain.collection.CollectionRepository;
 import com.toy.pick.domain.common.ItemStatus;
 import com.toy.pick.domain.member.Member;
 import com.toy.pick.domain.member.MemberRepository;
-import com.toy.pick.domain.memberCollection.MemberCollection;
-import com.toy.pick.domain.memberCollection.MemberCollectionRepository;
 import com.toy.pick.exception.CustomException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +27,6 @@ import java.util.stream.Collectors;
 public class CollectionService {
     private final CollectionRepository collectionRepository;
     private final MemberRepository memberRepository;
-    private final MemberCollectionRepository memberCollectionRepository;
 
 
     public List<MyCollectionsRes> getMyCollections(Long memberId) {
@@ -78,23 +75,5 @@ public class CollectionService {
     }
 
 
-    public List<FollowCollectionRes> getFollowCollections(Long id) {
-        Member memberWithFollowCollection = memberRepository.findByMemberWithFollowCollection(id);
 
-        List<MemberCollection> memberCollections = memberWithFollowCollection.getMemberCollections(); // n+1 의심
-        List<Collection> collects = memberCollections.stream().map(MemberCollection::getCollection).collect(Collectors.toList());
-        return collects.stream()
-                .filter(c-> c.getStatus().equals(ItemStatus.PUBLIC))
-                .map(FollowCollectionRes::of)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional
-    public void removeMyFollowCollection(Long cId, Long memberId) {
-        MemberCollection memberCollection = memberCollectionRepository.findByMemberIdAndCollectionId(memberId, cId).orElseThrow(
-                () -> new CustomException("해당 팔로우는 존재하지 않습니다.")
-        );
-        System.out.println(memberCollection.getId());
-        memberCollectionRepository.delete(memberCollection);
-    }
 }

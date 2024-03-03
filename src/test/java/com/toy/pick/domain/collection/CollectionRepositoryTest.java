@@ -8,8 +8,6 @@ import com.toy.pick.domain.collectionPlace.CollectionPlaceRepository;
 import com.toy.pick.domain.common.ItemStatus;
 import com.toy.pick.domain.member.Member;
 import com.toy.pick.domain.member.MemberRepository;
-import com.toy.pick.domain.memberCollection.MemberCollection;
-import com.toy.pick.domain.memberCollection.MemberCollectionRepository;
 import com.toy.pick.domain.place.Place;
 import com.toy.pick.domain.place.PlaceRepository;
 import jakarta.persistence.EntityListeners;
