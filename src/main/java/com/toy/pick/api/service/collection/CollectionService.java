@@ -72,6 +72,11 @@ public class CollectionService {
         }else{
             throw new CustomException("기본 컬렉션은 삭제 할수 없습니다.");
         }
+
+        // TODO 삭제 관련해서 같이 삭제할 친구들 고민해보기
+
+
+
     }
 
 

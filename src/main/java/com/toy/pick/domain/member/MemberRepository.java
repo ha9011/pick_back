@@ -12,6 +12,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
      Member findByUserId(String userId);
      Member findByAccessToken(String accessToken);
 
-
-
 }
