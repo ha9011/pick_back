@@ -12,8 +12,16 @@ import java.util.List;
 public interface CollectionRepository extends JpaRepository<Collection, Long> {
 
 
-    // TODO -> 장소 메모가 개별인지 공통인지에 따라 다시 변경;
+    // TODO -> 장소 메모가 개별인지 공통인지에 따라 다시 변경; -> 그냥 컬렉션별 개별로
     // -> 장소, 메모 마다 collection updateAt을 업데이트 하자.
     @Query("select c from Collection c where c.member = :member ")
     List<Collection> findAllByMember(@Param("member") Member member);
+
+    @Query("select c from Collection c JOIN FETCH c.collectionPlaces cp JOIN FETCH cp.place p where c.id = :cId ")
+    Collection collectionTest(@Param("cId") Long cId);
+
+
+
+
+
 }

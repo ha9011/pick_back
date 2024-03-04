@@ -66,7 +66,7 @@ public class PlaceService {
         newPlace.updatePlaceImg(placeImages);
 
         // 3. 컬렉션과 장소 저장
-        collectionPlaceService.savedCollectionPlace(newPlace, req.getCollectionId());
+        collectionPlaceService.savedCollectionPlace(newPlace, req.getCollectionId(), req.getMemo(), req.getUrl());
 
         // 4. 유저와 장소에 대한 메모, url 저장
         memberPlaceService.savedMemberPlace(memberId, newPlace, req);

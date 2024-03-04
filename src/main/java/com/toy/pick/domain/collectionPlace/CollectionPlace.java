@@ -27,12 +27,19 @@ public class CollectionPlace extends BaseEntity {
     @JsonIgnore
     private Place place;
 
-    public CollectionPlace(Collection collection, Place place) {
+    private String memo;
+
+    private String url;
+
+
+    public CollectionPlace(Collection collection, Place place, String memo, String url) {
         this.collection = collection;
         this.place = place;
+        this.memo = memo;
+        this.url = url;
     }
 
-    public static CollectionPlace create(Collection collection, Place place){
-        return new CollectionPlace(collection, place);
+    public static CollectionPlace create(Collection collection, Place place, String memo, String url){
+        return new CollectionPlace(collection, place, memo, url);
     }
 }

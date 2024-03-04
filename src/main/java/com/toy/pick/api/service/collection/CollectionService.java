@@ -4,6 +4,7 @@ package com.toy.pick.api.service.collection;
 import com.toy.pick.api.controller.collection.request.PostMyCollectionsReq;
 import com.toy.pick.api.controller.collection.request.PutMyCollectionsReq;
 import com.toy.pick.api.service.collection.response.FollowCollectionRes;
+import com.toy.pick.api.service.collection.response.MyCollectionsInfoByCIdRes;
 import com.toy.pick.api.service.collection.response.MyCollectionsRes;
 import com.toy.pick.domain.collection.Collection;
 import com.toy.pick.domain.collection.CollectionRepository;
@@ -99,5 +100,12 @@ public class CollectionService {
 
         // 컬렉션 수정
         collection.updateCollectionInfo(req.getTitle(), req.getMemo());
+    }
+
+    public MyCollectionsInfoByCIdRes getCollectionByCid(Long memberId, Long cId) {
+        Collection collection = collectionRepository.collectionTest(cId);
+
+        MyCollectionsInfoByCIdRes myCollectionsInfoByCIdRes = MyCollectionsInfoByCIdRes.of(collection);
+        return myCollectionsInfoByCIdRes;
     }
 }

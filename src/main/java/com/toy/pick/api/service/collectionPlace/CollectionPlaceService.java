@@ -11,8 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -23,12 +21,12 @@ public class CollectionPlaceService {
     private final CollectionRepository collectionRepository;
 
 
-    public void savedCollectionPlace(Place place, Long collectionId){
+    public void savedCollectionPlace(Place place, Long collectionId, String memo, String url){
         Collection collection = collectionRepository.findById(collectionId).orElseThrow(
                 () -> new CustomException("존재하지 않은 콜렉션입니다.")
         );
 
-        CollectionPlace collectionPlace = CollectionPlace.create(collection, place);
+        CollectionPlace collectionPlace = CollectionPlace.create(collection, place, memo, url);
         collectionPlaceRepository.save(collectionPlace);
     }
 

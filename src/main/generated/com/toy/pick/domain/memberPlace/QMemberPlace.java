@@ -36,14 +36,10 @@ public class QMemberPlace extends EntityPathBase<MemberPlace> {
 
     public final com.toy.pick.domain.member.QMember member;
 
-    public final StringPath memo = createString("memo");
-
     public final com.toy.pick.domain.place.QPlace place;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
-
-    public final StringPath url = createString("url");
 
     public QMemberPlace(String variable) {
         this(MemberPlace.class, forVariable(variable), INITS);

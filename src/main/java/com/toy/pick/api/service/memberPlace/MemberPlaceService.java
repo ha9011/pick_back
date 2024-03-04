@@ -28,7 +28,7 @@ public class MemberPlaceService {
 
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new CustomException("존재하지 않은 유저입니다."));
 
-        MemberPlace memberPlace = MemberPlace.create(member, place, req.getMemo(), req.getUrl());
+        MemberPlace memberPlace = MemberPlace.create(member, place);
 
         MemberPlace save = memberPlaceRepository.save(memberPlace);
     }

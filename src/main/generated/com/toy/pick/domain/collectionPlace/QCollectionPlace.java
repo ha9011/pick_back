@@ -34,10 +34,14 @@ public class QCollectionPlace extends EntityPathBase<CollectionPlace> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final StringPath memo = createString("memo");
+
     public final com.toy.pick.domain.place.QPlace place;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
+
+    public final StringPath url = createString("url");
 
     public QCollectionPlace(String variable) {
         this(CollectionPlace.class, forVariable(variable), INITS);

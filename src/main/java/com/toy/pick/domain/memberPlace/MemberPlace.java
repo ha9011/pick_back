@@ -27,27 +27,19 @@ public class MemberPlace extends BaseEntity {
     @JoinColumn(name = "place_id")
     private Place place;
 
-    private String memo;
-
-    private String url;
-
     private LocalDateTime approach50mAt;
 
     @Builder
-    public MemberPlace(Member member, Place place, String memo, String url, LocalDateTime approach50mAt) {
+    public MemberPlace(Member member, Place place, LocalDateTime approach50mAt) {
         this.member = member;
         this.place = place;
-        this.memo = memo;
-        this.url = url;
         this.approach50mAt = approach50mAt;
     }
 
-    public static MemberPlace create(Member member, Place place, String memo, String url){
+    public static MemberPlace create(Member member, Place place){
         return MemberPlace.builder()
                 .member(member)
                 .place(place)
-                .memo(memo)
-                .url(url)
                 .approach50mAt(null)
                 .build();
     }
