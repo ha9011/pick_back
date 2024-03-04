@@ -24,7 +24,7 @@ public class Place extends BaseEntity {
     // 장소이름
     private String name;
     // 주소
-    private String address;
+    private String address; // 도로명
     // 상세주소
     private String detailAddress;
 
@@ -40,7 +40,7 @@ public class Place extends BaseEntity {
 
     // 이미지
     @Enumerated(EnumType.STRING)
-    private ItemStatus itemStatus;
+    private ItemStatus itemStatus;// TODO 이미지 공개 비공개 이건 장소에 해당하는 거니, 필요함
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name ="place_id")

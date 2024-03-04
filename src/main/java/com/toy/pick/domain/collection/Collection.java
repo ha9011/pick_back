@@ -68,5 +68,13 @@ public class Collection extends BaseEntity {
         this.lastUpdateAt = now;
     }
 
+
+    public void updateCollectionInfo(String title, String memo){
+        this.title = title;
+        this.memo = memo;
+        this.refreshLastUpdateAt(LocalDateTime.now());
+    }
+
+
 }
 
