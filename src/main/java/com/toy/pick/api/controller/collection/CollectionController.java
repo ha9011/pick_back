@@ -117,8 +117,7 @@ public class CollectionController {
             @RequestBody @Valid PutMyCollectionsReq putMyCollectionsReq
     ) throws Exception {
         try {
-            Long id = jwtTokenProvider.getJwtPayloadId(accessToken);
-            collectionService.updateCollection(id, cId, putMyCollectionsReq);
+            collectionService.updateCollection(cId, putMyCollectionsReq);
             return ApiResponseDto.of(HttpStatus.OK, null, "컬렉션을 수정하였습니다.","SUCCESS"  );
         } catch (CustomException e) {
             throw new CustomException(e.getMessage());

@@ -34,7 +34,6 @@ public class CollectionService {
     private final CollectionRepository collectionRepository;
     private final CollectionPlaceRepository collectionPlaceRepository;
     private final MemberRepository memberRepository;
-    private final PlaceRepository placeRepository;
 
     public List<MyCollectionsRes> getMyCollections(Long memberId) {
         Member member = findMemberById(memberId);
@@ -87,17 +86,10 @@ public class CollectionService {
     }
 
     @Transactional
-    public void updateCollection(Long id, Long cId, PutMyCollectionsReq req) {
+    public void updateCollection(Long cId, PutMyCollectionsReq req) {
         Collection collection = collectionRepository.findById(cId).orElseThrow(
                 () -> new CustomException("해당 컬렉션은 존재하지 않습니다.")
         );
-
-        // 삭제할 Plcce Entity 가져오기
-        List<Place> places = placeRepository.findAllById(req.getRemovePlaceIds());
-
-        // 장소 삭제
-        collectionPlaceRepository.removePlacesInCollectionByCid(collection, places);
-
         // 컬렉션 수정
         collection.updateCollectionInfo(req.getTitle(), req.getMemo());
     }
