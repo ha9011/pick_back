@@ -17,8 +17,8 @@ public interface CollectionRepository extends JpaRepository<Collection, Long> {
     @Query("select c from Collection c where c.member = :member ")
     List<Collection> findAllByMember(@Param("member") Member member);
 
-    @Query("select c from Collection c JOIN FETCH c.collectionPlaces cp JOIN FETCH cp.place p where c.id = :cId ")
-    Collection collectionTest(@Param("cId") Long cId);
+    @Query("select c from Collection c LEFT JOIN FETCH c.collectionPlaces cp LEFT JOIN FETCH cp.place p where c.id = :cId ")
+    Collection collectionWithPlaceByCId(@Param("cId") Long cId);
 
 
 

@@ -142,8 +142,7 @@ public class CollectionController {
     ) throws Exception {
         try {
             Long id = jwtTokenProvider.getJwtPayloadId(accessToken);
-            MyCollectionsInfoByCIdRes collectionByCid = collectionService.getCollectionByCid(id, cId);
-            System.out.println("--------");
+            MyCollectionsInfoByCIdRes collectionByCid = collectionService.getCollectionByCid(cId);
             return ApiResponseDto.ok(collectionByCid);
         } catch (CustomException e) {
             throw new CustomException(e.getMessage());

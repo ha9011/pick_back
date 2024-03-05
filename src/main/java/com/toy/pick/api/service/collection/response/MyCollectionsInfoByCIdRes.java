@@ -17,7 +17,7 @@ public class MyCollectionsInfoByCIdRes {
     private final Long id;
     private final String title;
     private final String memo;
-    private final List<test> places;
+    private final List<PlaceInfo> places;
 
     @Builder
     public MyCollectionsInfoByCIdRes(Collection collection) {
@@ -25,12 +25,12 @@ public class MyCollectionsInfoByCIdRes {
         this.title = collection.getTitle();
         this.memo = collection.getMemo();
 
-        List<test> collect = collection.getCollectionPlaces().stream().map(cp -> {
+        List<PlaceInfo> collect = collection.getCollectionPlaces().stream().map(cp -> {
             String memo1 = cp.getMemo();
             System.out.println("memo1 : " + memo1);
             String url = cp.getUrl();
             System.out.println("url : " + url);
-            return new test(cp.getPlace(), memo1, url);
+            return new PlaceInfo(cp.getPlace(), memo1, url);
         }).collect(Collectors.toList());
         this.places = collect;
 
@@ -42,7 +42,7 @@ public class MyCollectionsInfoByCIdRes {
     }
 
     @Getter
-    class test {
+    class PlaceInfo {
         private Long id;
         private String name;
         private String category;
@@ -53,7 +53,7 @@ public class MyCollectionsInfoByCIdRes {
         private String memo;
         private String url;
 
-        public test(Place place, String memo, String url) {
+        public PlaceInfo(Place place, String memo, String url) {
             this.id = place.getId();
             this.name = place.getName();
             this.category = place.getCategory().getText();

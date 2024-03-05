@@ -102,10 +102,9 @@ public class CollectionService {
         collection.updateCollectionInfo(req.getTitle(), req.getMemo());
     }
 
-    public MyCollectionsInfoByCIdRes getCollectionByCid(Long memberId, Long cId) {
-        Collection collection = collectionRepository.collectionTest(cId);
-
-        MyCollectionsInfoByCIdRes myCollectionsInfoByCIdRes = MyCollectionsInfoByCIdRes.of(collection);
-        return myCollectionsInfoByCIdRes;
+    public MyCollectionsInfoByCIdRes getCollectionByCid(Long cId) {
+        Collection collection = collectionRepository.collectionWithPlaceByCId(cId);
+        log.info("-----");
+        return MyCollectionsInfoByCIdRes.of(collection);
     }
 }
