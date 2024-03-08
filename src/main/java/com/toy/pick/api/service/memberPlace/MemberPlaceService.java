@@ -23,14 +23,15 @@ public class MemberPlaceService {
     private final MemberRepository memberRepository;
     private final MemberPlaceRepository memberPlaceRepository;
 
-    public void savedMemberPlace(Long memberId, Place place, PostCollectionPlaceReq req){
+    public void savedMemberPlace(Long memberId, Place place){
 
-
+        // TODO memberPlace member - place 둘다 (유니크 조건)
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new CustomException("존재하지 않은 유저입니다."));
 
         MemberPlace memberPlace = MemberPlace.create(member, place);
 
         MemberPlace save = memberPlaceRepository.save(memberPlace);
+
     }
 
 

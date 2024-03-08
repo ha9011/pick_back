@@ -14,6 +14,14 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+        uniqueConstraints={
+                @UniqueConstraint(
+                        name= "member_place_unique",
+                        columnNames={"member_id", "place_id"}
+                )
+        }
+)
 public class MemberPlace extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

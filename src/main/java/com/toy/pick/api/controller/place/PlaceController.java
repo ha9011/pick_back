@@ -2,6 +2,8 @@ package com.toy.pick.api.controller.place;
 
 import com.toy.pick.api.ApiResponseDto;
 import com.toy.pick.api.controller.place.request.PostCollectionPlaceReq;
+import com.toy.pick.api.controller.place.request.PostPlaceInCollectionReq;
+import com.toy.pick.api.controller.place.request.PostPlaceReq;
 import com.toy.pick.api.service.collectionPlace.CollectionPlaceService;
 import com.toy.pick.api.service.memberPlace.MemberPlaceService;
 import com.toy.pick.api.service.place.PlaceService;
@@ -31,7 +33,7 @@ public class PlaceController {
             @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "FAIL", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
     })
-    @PostMapping("/place/collection")
+    @PostMapping("/place/withCollection")
     public ApiResponseDto<Object> postCollectionPlace(
             @Parameter(example = "accesstoken", description ="상단에 Authorize로 등록하면, 아무값 넣어도 상관없음(swagger)" )
             @RequestHeader("Authorization") String accessToken,
@@ -52,6 +54,55 @@ public class PlaceController {
             throw new Exception(e.getMessage());
         }
     };
+
+    @Operation(description = "장소만 추가")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "400", description = "FAIL", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
+    })
+    @PostMapping("/place")
+    public ApiResponseDto<Object> postPlace(
+            @Parameter(example = "accesstoken", description ="상단에 Authorize로 등록하면, 아무값 넣어도 상관없음(swagger)" )
+            @RequestHeader("Authorization") String accessToken,
+            @Parameter(description ="장소 BODY" )
+            @ModelAttribute PostPlaceReq req
+    ) throws Exception {
+        try {
+            // TODO 기획 2-10 어떻게 할지 확인 후 추가
+            Long memberId = jwtTokenProvider.getJwtPayloadId(accessToken);
+            Place place = placeService.savePlaceWithImage(req, memberId);
+            return ApiResponseDto.ok(place);
+        } catch (CustomException e) {
+            throw new CustomException(e.getMessage());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    };
+
+    @Operation(description = "추가한 장소를 컬렉션에 넣기")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "400", description = "FAIL", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
+    })
+    @PostMapping("/place/inCollection")
+    public ApiResponseDto<Object> postCollectionPlace(
+            @Parameter(example = "accesstoken", description ="상단에 Authorize로 등록하면, 아무값 넣어도 상관없음(swagger)" )
+            @RequestHeader("Authorization") String accessToken,
+            @Parameter(description ="컬랙션-장소 BODY" )
+            @ModelAttribute PostPlaceInCollectionReq req
+    ) throws Exception {
+        try {
+            // TODO 기획 2-10 어떻게 할지 확인 후 추가
+            Long memberId = jwtTokenProvider.getJwtPayloadId(accessToken);
+            placeService.savePlaceInCollection(req, memberId);
+            return ApiResponseDto.of(HttpStatus.OK, null, "컬렉션에 장소가 추가되었습니다.","SUCCESS"  );
+        } catch (CustomException e) {
+            throw new CustomException(e.getMessage());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    };
+
 
 //
 //    @Operation(description = "컬렉션에 해당하는 장소 정보 조회")

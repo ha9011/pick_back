@@ -1,6 +1,7 @@
 package com.toy.pick.domain.place;
 
 import com.toy.pick.api.controller.place.request.PostCollectionPlaceReq;
+import com.toy.pick.api.controller.place.request.PostPlaceReq;
 import com.toy.pick.domain.BaseEntity;
 import com.toy.pick.domain.common.ItemStatus;
 import com.toy.pick.domain.placeImage.PlaceImage;
@@ -69,6 +70,20 @@ public class Place extends BaseEntity {
                 .detailAddress(req.getDetailAddress())
                 .build();
     }
+
+
+    public static Place create(PostPlaceReq req){
+        return Place.builder()
+                .address(req.getAddress())
+                .category(PlaceCategory.valueOf(req.getCategory()))
+                .name(req.getName())
+                .x(req.getX())
+                .y(req.getY())
+                .itemStatus(ItemStatus.valueOf(req.getItemStatus()))
+                .detailAddress(req.getDetailAddress())
+                .build();
+    }
+
 
     public void updatePlaceImg(List<PlaceImage> placeImages){
             this.placeImages = placeImages;
