@@ -42,8 +42,6 @@ public class QCollection extends EntityPathBase<Collection> {
 
     public final StringPath memo = createString("memo");
 
-    public final EnumPath<com.toy.pick.domain.common.ItemStatus> status = createEnum("status", com.toy.pick.domain.common.ItemStatus.class);
-
     public final StringPath title = createString("title");
 
     //inherited

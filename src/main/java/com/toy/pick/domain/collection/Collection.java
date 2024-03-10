@@ -25,10 +25,6 @@ public class Collection extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ItemStatus status; // 노말
-
     private String memo;
 
     @ColumnDefault("false")
@@ -44,9 +40,8 @@ public class Collection extends BaseEntity {
     @Column
     private LocalDateTime lastUpdateAt;
     @Builder
-    public Collection(String title, ItemStatus status, String memo, boolean isDeletable, Member member, LocalDateTime now) {
+    public Collection(String title, String memo, boolean isDeletable, Member member, LocalDateTime now) {
         this.title = title;
-        this.status = status;
         this.memo = memo;
         this.isDeletable = isDeletable;
         this.member = member;
@@ -55,13 +50,13 @@ public class Collection extends BaseEntity {
 
 
     public static Collection create(PostMyCollectionsReq req, Member member){
-        return new Collection(req.getTitle(), ItemStatus.valueOf(req.getStatus()), req.getMemo(), true, member,LocalDateTime.now());
+        return new Collection(req.getTitle(), req.getMemo(), true, member,LocalDateTime.now());
 
     }
 
     // 맴버 계정 생성시, 최초 생성되는 기본 컬랙션
     public static Collection defaultCreate(Member member){
-        return new Collection("기본", ItemStatus.PRIVATE, "", false, member,LocalDateTime.now());
+        return new Collection("기본",  "", false, member,LocalDateTime.now());
     }
 
     public void refreshLastUpdateAt(LocalDateTime now){

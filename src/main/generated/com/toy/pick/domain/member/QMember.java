@@ -34,6 +34,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final ListPath<com.toy.pick.domain.memberPlace.MemberPlace, com.toy.pick.domain.memberPlace.QMemberPlace> memberPlaces = this.<com.toy.pick.domain.memberPlace.MemberPlace, com.toy.pick.domain.memberPlace.QMemberPlace>createList("memberPlaces", com.toy.pick.domain.memberPlace.MemberPlace.class, com.toy.pick.domain.memberPlace.QMemberPlace.class, PathInits.DIRECT2);
+
     public final StringPath nickname = createString("nickname");
 
     public final StringPath provider = createString("provider");

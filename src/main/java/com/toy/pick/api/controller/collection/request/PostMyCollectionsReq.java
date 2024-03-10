@@ -24,10 +24,6 @@ public class PostMyCollectionsReq {
     @Schema(description = "컬랙션 제목")
     private String title;
 
-    @Pattern(regexp = "^(PUBLIC|PRIVATE)$", message = "'PUBLIC','PRIVATE' 값 외에는 입력할 수 없습니다.")
-    @NotBlank(message = "필수값 입니다.")
-    @Schema(description = "게시물 상태(공개/비공개)", defaultValue = "PUBLIC", allowableValues = {"PUBLIC", "PRIVATE"})
-    private String status; // 노말
 
     @Length(max = 50, message = "최대 50자까지만 입력할 수 있습니다.")
     @Schema(description = "컬랙션 메모")

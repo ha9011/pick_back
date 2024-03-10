@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -105,6 +106,30 @@ public class PlaceController {
             throw new Exception(e.getMessage());
         }
     };
+
+    @Operation(summary = "특정컬렉션 안에 특정장소에 대한 정보", description = "특정컬렉션 안에 특정장소에 대한 정보")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "400", description = "FAIL", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
+    })
+    @GetMapping("/{cId}/{pId}")
+    public ApiResponseDto<Object> postCollectionPlace(
+            @Parameter(example = "accesstoken", description ="상단에 Authorize로 등록하면, 아무값 넣어도 상관없음(swagger)" )
+            @RequestHeader("Authorization") String accessToken,
+            @Parameter(name = "cId", description = "컬렉션 Id", required = true) @PathVariable Long cId,
+            @Parameter(name = "pId", description = "장소 Id", required = true) @PathVariable Long pId
+    ) throws Exception {
+        try {
+            Long memberId = jwtTokenProvider.getJwtPayloadId(accessToken);
+            placeService.getPlaceInfoByPIdWithCId(memberId, cId, pId);
+            return ApiResponseDto.of(HttpStatus.OK, null, "컬렉션에 장소가 추가되었습니다.","SUCCESS"  );
+        } catch (CustomException e) {
+            throw new CustomException(e.getMessage());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    };
+
 
 
 //

@@ -10,6 +10,7 @@ import com.toy.pick.api.service.place.response.SavePlaceWithImageRes;
 import com.toy.pick.api.service.s3.S3UploadService;
 import com.toy.pick.domain.collection.Collection;
 import com.toy.pick.domain.collection.CollectionRepository;
+import com.toy.pick.domain.member.Member;
 import com.toy.pick.domain.place.Place;
 import com.toy.pick.domain.place.PlaceRepository;
 import com.toy.pick.domain.placeImage.PlaceImage;
@@ -153,4 +154,11 @@ public class PlaceService {
 
     }
 
+    public void getPlaceInfoByPIdWithCId(Long memberId, Long cId, Long pId) {
+        log.info("-----1");
+        Member member = placeRepository.test(memberId, pId);
+        log.info("-----2");
+        List<Collection> collections = member.getCollections();
+        log.info("size={}",collections.size());
+    }
 }
