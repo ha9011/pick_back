@@ -31,7 +31,7 @@ public class PlaceController {
     private final PlaceService placeService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Operation(description = "컬렉션에 해당 장소 추가")
+    @Operation(summary = "컬렉션에 해당 장소 추가", description = "컬렉션에 해당 장소 추가")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "FAIL", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
@@ -58,7 +58,7 @@ public class PlaceController {
         }
     };
 
-    @Operation(description = "장소만 추가")
+    @Operation(summary =  "장소만 추가", description = "장소만 추가")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "FAIL", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
@@ -82,7 +82,7 @@ public class PlaceController {
         }
     };
 
-    @Operation(description = "추가한 장소를 컬렉션에 넣기")
+    @Operation(summary = "추가한 장소를 컬렉션에 넣기", description = "추가한 장소를 컬렉션에 넣기")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "SUCCESS", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "FAIL", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
