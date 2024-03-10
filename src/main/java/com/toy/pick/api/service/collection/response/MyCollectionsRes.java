@@ -16,7 +16,6 @@ public class MyCollectionsRes {
 
     private final String title;
 
-    private final ItemStatus status; // 노말
     private final String memo;
 
     private final boolean isDeletable; // 기본 칼럼은 삭제 할 수 없다.
@@ -28,7 +27,6 @@ public class MyCollectionsRes {
     public MyCollectionsRes(Collection collection) {
         this.id = collection.getId();
         this.title = collection.getTitle();
-        this.status = collection.getStatus();
         this.memo = collection.getMemo();
         this.isDeletable = collection.isDeletable();
         this.lastUpdateTime = this.transferUpdateTime(collection.getLastUpdateAt());
@@ -39,7 +37,6 @@ public class MyCollectionsRes {
     public MyCollectionsRes(Collection c, Long placeCount) {
         this.id = c.getId();
         this.title = c.getTitle();
-        this.status = c.getStatus();
         this.memo = c.getMemo();
         this.isDeletable = c.isDeletable();
         this.lastUpdateTime = this.transferUpdateTime(c.getLastUpdateAt());
