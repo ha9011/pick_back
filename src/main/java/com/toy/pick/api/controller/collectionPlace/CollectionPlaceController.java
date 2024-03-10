@@ -5,8 +5,6 @@ import com.toy.pick.api.controller.collection.request.PostMyCollectionsReq;
 import com.toy.pick.api.controller.collection.request.PutMyCollectionsReq;
 import com.toy.pick.api.controller.collectionPlace.request.RemovePlaceInMyCollectionsByCIdReq;
 import com.toy.pick.api.service.collection.CollectionService;
-import com.toy.pick.api.service.collection.response.MyCollectionsInfoByCIdRes;
-import com.toy.pick.api.service.collection.response.MyCollectionsRes;
 import com.toy.pick.api.service.collectionPlace.CollectionPlaceService;
 import com.toy.pick.component.JwtTokenProvider;
 import com.toy.pick.exception.CustomException;

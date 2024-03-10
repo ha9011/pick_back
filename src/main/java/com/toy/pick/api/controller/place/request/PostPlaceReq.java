@@ -9,7 +9,6 @@ import java.util.List;
 
 @Schema(description = "컬렉션에 장소 추가 & 장소 등록")
 @Getter
-@ToString
 public class PostPlaceReq {
     // 장소이름
     @Schema(description = "장소명")

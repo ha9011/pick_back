@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -44,9 +45,16 @@ public class CollectionPlaceService {
 
         // 삭제할 Plcce Entity 가져오기
         List<Place> places = placeRepository.findAllById(req.getRemovePlaceIds());
-
+        if(places.size() != req.getRemovePlaceIds().size()){
+            throw new CustomException("삭제할 장소가 존재하지 않습니다.");
+        }
         // 장소 삭제
         collectionPlaceRepository.removePlacesInCollectionByCid(collection, places);
+
+
+        // 해당 콜렉션 최근업데이트 새로 갱신
+        collection.refreshLastUpdateAt(LocalDateTime.now());
+
     }
 
 

@@ -37,11 +37,12 @@ public class CollectionService {
 
     public List<MyCollectionsRes> getMyCollections(Long memberId) {
         Member member = findMemberById(memberId);
-        List<Collection> collections = collectionRepository.findAllByMember(member);
+        List<MyCollectionsRes> collections = collectionRepository.findAllByMember(member);
 
-        return collections.stream().map(MyCollectionsRes::of)
-                .collect(Collectors.toList());
-
+        log.info("size = {}",collections.toString());
+//        return collections.stream().map(MyCollectionsRes::of)
+//                .collect(Collectors.toList());
+        return collections;
     }
 
     @Transactional

@@ -22,6 +22,8 @@ public class MyCollectionsRes {
     private final boolean isDeletable; // 기본 칼럼은 삭제 할 수 없다.
 
     private final String lastUpdateTime;
+
+    private final Long placeCount;
     @Builder
     public MyCollectionsRes(Collection collection) {
         this.id = collection.getId();
@@ -30,12 +32,23 @@ public class MyCollectionsRes {
         this.memo = collection.getMemo();
         this.isDeletable = collection.isDeletable();
         this.lastUpdateTime = this.transferUpdateTime(collection.getLastUpdateAt());
+        this.placeCount = 0L;
+    }
+
+    @Builder
+    public MyCollectionsRes(Collection c, Long placeCount) {
+        this.id = c.getId();
+        this.title = c.getTitle();
+        this.status = c.getStatus();
+        this.memo = c.getMemo();
+        this.isDeletable = c.isDeletable();
+        this.lastUpdateTime = this.transferUpdateTime(c.getLastUpdateAt());
+        this.placeCount = placeCount;
     }
 
     public static MyCollectionsRes of(Collection collection){
         return new MyCollectionsRes(collection);
     }
-
     String transferUpdateTime(LocalDateTime updateAt) {
 
         LocalDateTime currentTime = LocalDateTime.now();

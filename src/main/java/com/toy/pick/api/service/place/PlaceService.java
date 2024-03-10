@@ -5,8 +5,8 @@ import com.toy.pick.api.controller.place.request.PostCollectionPlaceReq;
 import com.toy.pick.api.controller.place.request.PostPlaceInCollectionReq;
 import com.toy.pick.api.controller.place.request.PostPlaceReq;
 import com.toy.pick.api.service.collectionPlace.CollectionPlaceService;
-import com.toy.pick.api.service.member.response.GetUserInfoByIdRes;
 import com.toy.pick.api.service.memberPlace.MemberPlaceService;
+import com.toy.pick.api.service.place.response.SavePlaceWithImageRes;
 import com.toy.pick.api.service.s3.S3UploadService;
 import com.toy.pick.domain.collection.Collection;
 import com.toy.pick.domain.collection.CollectionRepository;
@@ -79,7 +79,7 @@ public class PlaceService {
     }
 
     @Transactional
-    public Place savePlaceWithImage(PostPlaceReq req, Long memberId) throws Exception {
+    public SavePlaceWithImageRes savePlaceWithImage(PostPlaceReq req, Long memberId) throws Exception {
 
         // 장소 로직 체크
 
@@ -100,7 +100,8 @@ public class PlaceService {
         // 장소에 해당하는 이미지 저장
         newPlace.updatePlaceImg(placeImages);
 
-        return newPlace;
+        return SavePlaceWithImageRes.of(newPlace);
+
     }
 
     @Transactional
