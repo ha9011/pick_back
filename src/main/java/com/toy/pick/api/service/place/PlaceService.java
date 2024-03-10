@@ -123,6 +123,7 @@ public class PlaceService {
         collectionPlaceService.savedCollectionPlace(place, req.getCollectionId(), req.getMemo(), req.getUrl());
 
         // 2. 유저와 장소
+
         memberPlaceService.savedMemberPlace(memberId, place);
 
         // 3. 해당 콜렉션 최근업데이트 새로 갱신
