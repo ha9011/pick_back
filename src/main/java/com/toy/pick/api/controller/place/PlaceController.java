@@ -7,6 +7,7 @@ import com.toy.pick.api.controller.place.request.PostPlaceReq;
 import com.toy.pick.api.service.collectionPlace.CollectionPlaceService;
 import com.toy.pick.api.service.memberPlace.MemberPlaceService;
 import com.toy.pick.api.service.place.PlaceService;
+import com.toy.pick.api.service.place.response.GetPlaceInfoByPIdWithCIdRes;
 import com.toy.pick.api.service.place.response.SavePlaceWithImageRes;
 import com.toy.pick.component.JwtTokenProvider;
 import com.toy.pick.domain.collectionPlace.CollectionPlace;
@@ -121,8 +122,8 @@ public class PlaceController {
     ) throws Exception {
         try {
             Long memberId = jwtTokenProvider.getJwtPayloadId(accessToken);
-            placeService.getPlaceInfoByPIdWithCId(memberId, cId, pId);
-            return ApiResponseDto.of(HttpStatus.OK, null, "컬렉션에 장소가 추가되었습니다.","SUCCESS"  );
+            GetPlaceInfoByPIdWithCIdRes res = placeService.getPlaceInfoByPIdWithCId(memberId, cId, pId);
+            return ApiResponseDto.of(HttpStatus.OK, res, "장소에 대한 정보를 조회하였습니다.","SUCCESS"  );
         } catch (CustomException e) {
             throw new CustomException(e.getMessage());
         } catch (Exception e) {

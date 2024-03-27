@@ -20,6 +20,12 @@ public interface CollectionRepository extends JpaRepository<Collection, Long> {
             " having c.member = :member ")
     List<MyCollectionsRes> findAllByMember(@Param("member") Member member);
 
+    @Query("select new com.toy.pick.api.service.collection.response.MyCollectionsRes(c, count(cp.place)) from Collection c LEFT JOIN c.collectionPlaces cp" +
+            " group by c.id" +
+            " having c.id in :cIds ")
+    List<MyCollectionsRes> findAllByCIds(@Param("cIds") List<Long> cIds);
+
+
     @Query("select c from Collection c LEFT JOIN FETCH c.collectionPlaces cp LEFT JOIN FETCH cp.place p where c.id = :cId ")
     Collection collectionWithPlaceByCId(@Param("cId") Long cId);
 

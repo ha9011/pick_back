@@ -26,6 +26,8 @@ public class QPlace extends EntityPathBase<Place> {
 
     public final EnumPath<PlaceCategory> category = createEnum("category", PlaceCategory.class);
 
+    public final ListPath<com.toy.pick.domain.collectionPlace.CollectionPlace, com.toy.pick.domain.collectionPlace.QCollectionPlace> collectionPlaces = this.<com.toy.pick.domain.collectionPlace.CollectionPlace, com.toy.pick.domain.collectionPlace.QCollectionPlace>createList("collectionPlaces", com.toy.pick.domain.collectionPlace.CollectionPlace.class, com.toy.pick.domain.collectionPlace.QCollectionPlace.class, PathInits.DIRECT2);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 

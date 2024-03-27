@@ -37,7 +37,7 @@ public class FollowCollectionRes {
         Duration betweenTime = Duration.between(updateAt, currentTime);
 
         if (betweenTime.toHours() < 1) {
-            return "방급 업데이트";
+            return "방금 업데이트";
         } else if (betweenTime.toHours() < 24) {
             return "오늘 업데이트";
         } else if (betweenTime.toDays() < 7) {

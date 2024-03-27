@@ -3,7 +3,9 @@ package com.toy.pick.domain.place;
 import com.toy.pick.api.controller.place.request.PostCollectionPlaceReq;
 import com.toy.pick.api.controller.place.request.PostPlaceReq;
 import com.toy.pick.domain.BaseEntity;
+import com.toy.pick.domain.collectionPlace.CollectionPlace;
 import com.toy.pick.domain.common.ItemStatus;
+import com.toy.pick.domain.memberPlace.MemberPlace;
 import com.toy.pick.domain.placeImage.PlaceImage;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -46,6 +48,9 @@ public class Place extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name ="place_id")
     private List<PlaceImage> placeImages;
+
+    @OneToMany(mappedBy = "place")
+    private List<CollectionPlace> collectionPlaces; // 팔로우
 
 
     @Builder

@@ -4,13 +4,18 @@ import com.amazonaws.util.StringUtils;
 import com.toy.pick.api.controller.place.request.PostCollectionPlaceReq;
 import com.toy.pick.api.controller.place.request.PostPlaceInCollectionReq;
 import com.toy.pick.api.controller.place.request.PostPlaceReq;
+import com.toy.pick.api.service.collection.response.MyCollectionsRes;
 import com.toy.pick.api.service.collectionPlace.CollectionPlaceService;
 import com.toy.pick.api.service.memberPlace.MemberPlaceService;
+import com.toy.pick.api.service.place.response.GetPlaceInfoByPIdWithCIdRes;
 import com.toy.pick.api.service.place.response.SavePlaceWithImageRes;
 import com.toy.pick.api.service.s3.S3UploadService;
 import com.toy.pick.domain.collection.Collection;
 import com.toy.pick.domain.collection.CollectionRepository;
+import com.toy.pick.domain.collectionPlace.CollectionPlace;
 import com.toy.pick.domain.member.Member;
+import com.toy.pick.domain.memberPlace.MemberPlace;
+import com.toy.pick.domain.memberPlace.MemberPlaceRepository;
 import com.toy.pick.domain.place.Place;
 import com.toy.pick.domain.place.PlaceRepository;
 import com.toy.pick.domain.placeImage.PlaceImage;
@@ -29,6 +34,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +48,7 @@ public class PlaceService {
     private final CollectionRepository collectionRepository;
     private final CollectionPlaceService collectionPlaceService;
     private final MemberPlaceService memberPlaceService;
-
+    private final MemberPlaceRepository memberPlaceRepository;
     @Transactional
     public void savePlaceWithImage(PostCollectionPlaceReq req, Long memberId) throws Exception {
 
@@ -155,11 +162,41 @@ public class PlaceService {
 
     }
 
-    public void getPlaceInfoByPIdWithCId(Long memberId, Long cId, Long pId) {
-        log.info("-----1");
-        Member member = placeRepository.test(memberId, pId);
-        log.info("-----2");
-        List<Collection> collections = member.getCollections();
-        log.info("size={}",collections.size());
+    public GetPlaceInfoByPIdWithCIdRes getPlaceInfoByPIdWithCId(Long memberId, Long cId, Long pId) {
+//        log.info("-----1");
+//        Member member = placeRepository.test(memberId, pId);
+//        log.info("-----2");
+//        List<Collection> collections = member.getCollections().stream().filter(
+//                c ->  c.getId() == cId
+//        ).toList();
+//        log.info("size={}",collections.size());
+//        log.info("cId={}",collections.get(0).getId());
+//        List<CollectionPlace> collectionPlace = collections.get(0).getCollectionPlaces().stream().filter(
+//                cp -> cp.getPlace().getId() == pId
+//        ).toList();
+//
+//        log.info("size={}",collectionPlace.size());
+//        log.info("memo={}",collectionPlace.get(0).getMemo());
+//        log.info("url={}",collectionPlace.get(0).getUrl());
+
+        GetPlaceInfoByPIdWithCIdRes res = null;
+
+        // place 기본 정보
+        Place place = placeRepository.testPlace(pId);
+        // place를 포함한 컬렉션 정보
+        List<Long> collectIds = place.getCollectionPlaces().stream().map(cp -> cp.getCollection().getId()).collect(Collectors.toList());
+        List<MyCollectionsRes> allByCIds = collectionRepository.findAllByCIds(collectIds);
+        // 장소 접근
+        MemberPlace memberPlace = memberPlaceRepository.findByMemberIdAndPlaceId(memberId, pId).orElseThrow(
+                () -> new CustomException("정보가 존재하지 않습니다.")
+        );
+        LocalDateTime approach50mAt = memberPlace.getApproach50mAt();
+
+        for (CollectionPlace cp : place.getCollectionPlaces()) {
+            if(cp.getId() == cId){
+                res = GetPlaceInfoByPIdWithCIdRes.of(place, cp, approach50mAt, allByCIds);
+            }
+        }
+        return res;
     }
 }
